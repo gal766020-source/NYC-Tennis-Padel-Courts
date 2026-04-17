@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NYC Courts</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+
+    #app { display: flex; height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      width: 300px;
+      min-width: 300px;
+      height: 100%;
+      background: #fff;
+      box-shadow: 2px 0 16px rgba(0,0,0,0.12);
+      z-index: 1000;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-track { background: transparent; }
+    #sidebar::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 2px; }
+
+    /* ── MAP ── */
+    #map { flex: 1; height: 100%; }
+
+    /* ── HEADER ── */
+    .sidebar-header {
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .sidebar-header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #111;
+      letter-spacing: -0.5px;
+    }
+    .sidebar-header p {
+      font-size: 11.5px;
+      color: #999;
+      margin-top: 4px;
+      letter-spacing: 0.2px;
+    }
+
+    /* ── SEARCH ── */
+    .search-wrap {
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #e2e2e2;
+      border-radius: 8px;
+      font-size: 13.5px;
+      outline: none;
+      color: #222;
+      transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: #222; }
+
+    /* ── RESULT COUNT ── */
+    .result-count {
+      padding: 9px 20px;
+      font-size: 12px;
+      color: #999;
+      background: #fafafa;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .result-count span { font-weight: 700; color: #333; }
+
+    /* ── SECTIONS ── */
+    .section {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .section-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #aaa;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .section-desc {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 12px;
+      line-height: 1.55;
+    }
+
+    /* ── LOCATION BUTTON ── */
+    .btn-location {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      padding: 9px 14px;
+      border: 1.5px solid #333;
+      border-radius: 8px;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #333;
+      margin-bottom: 10px;
+      transition: background 0.15s;
+    }
+    .btn-location:hover { background: #f5f5f5; }
+
+    /* ── ADDRESS INPUT ── */
+    .address-input {
+      width: 100%;
+      padding: 9px 14px;
+      border: 1.5px solid #e2e2e2;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      margin-bottom: 10px;
+      color: #222;
+      transition: border-color 0.2s;
+    }
+    .address-input:focus { border-color: #222; }
+
+    /* ── DRIVE TIME TOGGLES ── */
+    .drive-time-toggles {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .drive-time-btn {
+      flex: 1;
+      padding: 8px 4px;
+      border: 1.5px solid #ddd;
+      border-radius: 7px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      color: #666;
+      transition: all 0.15s;
+    }
+    .drive-time-btn:hover { border-color: #999; color: #333; }
+    .drive-time-btn.active { background: #111; border-color: #111; color: #fff; }
+
+    /* ── FILTER BUTTON ── */
+    .btn-filter {
+      width: 100%;
+      padding: 11px;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-filter:hover { background: #333; }
+
+    /* ── STATUS MESSAGE ── */
+    .status-msg {
+      font-size: 12px;
+      color: #666;
+      margin-top: 9px;
+      padding: 8px 10px;
+      background: #f8f8f8;
+      border-radius: 6px;
+      line-height: 1.4;
+    }
+    .status-msg.error   { color: #b91c1c; background: #fef2f2; }
+    .status-msg.success { color: #166534; background: #f0fdf4; }
+    .clear-drive {
+      display: inline-block;
+      margin-left: 6px;
+      font-size: 11px;
+      color: #555;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .clear-drive:hover { color: #111; }
+
+    /* ── FILTERS SECTION ── */
+    .filters-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .reset-link {
+      font-size: 12px;
+      color: #777;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .reset-link:hover { color: #111; }
+
+    .filter-group { margin-bottom: 15px; }
+    .filter-group:last-child { margin-bottom: 0; }
+    .filter-group-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: #bbb;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 7px;
+      cursor: pointer;
+    }
+    .checkbox-item:last-child { margin-bottom: 0; }
+    .checkbox-item input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+      accent-color: #111;
+      flex-shrink: 0;
+    }
+    .checkbox-item label {
+      font-size: 13px;
+      color: #333;
+      cursor: pointer;
+      line-height: 1.3;
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      padding: 14px 20px;
+      display: flex;
+      gap: 18px;
+      border-top: 1px solid #f0f0f0;
+      background: #fafafa;
+    }
+    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #666; }
+    .legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+    .legend-dot.tennis { background: #2563EB; }
+    .legend-dot.padel  { background: #7C3AED; }
+
+    /* ── LEAFLET POPUP ── */
+    .leaflet-popup-content-wrapper {
+      border-radius: 10px !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+    }
+    .leaflet-popup-content { margin: 14px 16px !important; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <div id="sidebar">
+
+    <div class="sidebar-header">
+      <h1>NYC Courts</h1>
+      <p>Manhattan · Brooklyn · Queens · Bronx</p>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Search courts by name…" autocomplete="off">
+    </div>
+
+    <div class="result-count"><span id="courtCount">30</span> courts shown</div>
+
+    <!-- Drive Time -->
+    <div class="section">
+      <div class="section-title">Drive Time Filter</div>
+      <p class="section-desc">See which courts are within driving distance of your home or office</p>
+
+      <button class="btn-location" id="useLocationBtn">📍 Use my location</button>
+      <input type="text" class="address-input" id="addressInput" placeholder="e.g. 350 W 42nd St, NY">
+
+      <div class="drive-time-toggles">
+        <button class="drive-time-btn" data-minutes="10">10 min</button>
+        <button class="drive-time-btn active" data-minutes="15">15 min</button>
+        <button class="drive-time-btn" data-minutes="20">20 min</button>
+        <button class="drive-time-btn" data-minutes="30">30 min</button>
+      </div>
+
+      <button class="btn-filter" id="filterDriveBtn">Filter by drive time</button>
+      <div id="driveStatus" style="display:none"></div>
+    </div>
+
+    <!-- Filters -->
+    <div class="section">
+      <div class="filters-header">
+        <div class="section-title" style="margin-bottom:0">Filters</div>
+        <span class="reset-link" id="resetFilters">Reset all</span>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-title">Sport</div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-tennis" checked data-filter="sport" value="tennis">
+          <label for="f-tennis">🎾 Tennis</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-padel" checked data-filter="sport" value="padel">
+          <label for="f-padel">🏓 Padel</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-title">Location</div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-outdoor" checked data-filter="location" value="outdoor">
+          <label for="f-outdoor">Outdoor</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-indoor" checked data-filter="location" value="indoor">
+          <label for="f-indoor">Indoor</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-title">Surface</div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-hard" checked data-filter="surface" value="hard">
+          <label for="f-hard">Hard</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-clay" checked data-filter="surface" value="clay">
+          <label for="f-clay">Clay</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-grass" checked data-filter="surface" value="grass">
+          <label for="f-grass">Grass</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-unknown" checked data-filter="surface" value="unknown">
+          <label for="f-unknown">Unknown</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-title">Access</div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-free" checked data-filter="access" value="free">
+          <label for="f-free">Free / First come first serve</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-permit" checked data-filter="access" value="permit">
+          <label for="f-permit">NYC Parks Permit</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot tennis"></div> Tennis</div>
+      <div class="legend-item"><div class="legend-dot padel"></div> Padel</div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ════════════════════════════════════════════════════════════
+// COURT DATA — 30 realistic NYC courts
+// ════════════════════════════════════════════════════════════
+const courts = [
+  // ── MANHATTAN (10) ──────────────────────────────────────
+  {
+    id: 1, name: "Central Park Tennis Center",
+    sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
+    address: "Central Park, near W 93rd St, New York, NY 10024",
+    lat: 40.7859, lng: -73.9591, borough: "Manhattan", courts: 30
+  },
+  {
+    id: 2, name: "Riverside Park Tennis Courts",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
+    address: "Riverside Park, 97th St, New York, NY 10025",
+    lat: 40.7933, lng: -73.9745, borough: "Manhattan", courts: 10
+  },
+  {
+    id: 3, name: "Sutton East Tennis Club",
+    sport: "tennis", location: "indoor", surface: "hard", access: "free",
+    address: "488 E 60th St, New York, NY 10022",
+    lat: 40.7605, lng: -73.9556, borough: "Manhattan", courts: 8
+  },
+  {
+    id: 4, name: "Crosstown Tennis",
+    sport: "tennis", location: "indoor", surface: "hard", access: "free",
+    address: "14 W 31st St, New York, NY 10001",
+    lat: 40.7477, lng: -73.9893, borough: "Manhattan", courts: 6
+  },
+  {
+    id: 5, name: "Hudson River Park Courts",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
+    address: "Pier 40, West St & W Houston St, New York, NY 10014",
+    lat: 40.7282, lng: -74.0115, borough: "Manhattan", courts: 4
+  },
+  {
+    id: 6, name: "Manhattan Padel Club",
+    sport: "padel", location: "indoor", surface: "hard", access: "free",
+    address: "450 W 43rd St, New York, NY 10036",
+    lat: 40.7596, lng: -73.9967, borough: "Manhattan", courts: 4
+  },
+  {
+    id: 7, name: "NYC Padel East Side",
+    sport: "padel", location: "indoor", surface: "hard", access: "free",
+    address: "234 E 89th St, New York, NY 10128",
+    lat: 40.7779, lng: -73.9479, borough: "Manhattan", courts: 3
+  },
+  {
+    id: 8, name: "Inwood Hill Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "Inwood Hill Park, Seaman Ave, New York, NY 10034",
+    lat: 40.8675, lng: -73.9276, borough: "Manhattan", courts: 6
+  },
+  {
+    id: 9, name: "Carl Schurz Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
+    address: "E 84th St & East End Ave, New York, NY 10028",
+    lat: 40.7759, lng: -73.9420, borough: "Manhattan", courts: 4
+  },
+  {
+    id: 10, name: "Morningside Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "Morningside Ave & W 120th St, New York, NY 10027",
+    lat: 40.8091, lng: -73.9578, borough: "Manhattan", courts: 3
+  },
+
+  // ── BROOKLYN (8) ────────────────────────────────────────
+  {
+    id: 11, name: "Prospect Park Tennis Center",
+    sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
+    address: "Prospect Park, East Dr, Brooklyn, NY 11215",
+    lat: 40.6620, lng: -73.9707, borough: "Brooklyn", courts: 12
+  },
+  {
+    id: 12, name: "McCarren Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "776 Lorimer St, Brooklyn, NY 11222",
+    lat: 40.7205, lng: -73.9536, borough: "Brooklyn", courts: 8
+  },
+  {
+    id: 13, name: "Marine Park Tennis Courts",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "3302 Bedford Ave, Brooklyn, NY 11210",
+    lat: 40.5960, lng: -73.9219, borough: "Brooklyn", courts: 6
+  },
+  {
+    id: 14, name: "Owl's Head Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
+    address: "Colonial Rd & Shore Rd, Brooklyn, NY 11209",
+    lat: 40.6357, lng: -74.0198, borough: "Brooklyn", courts: 4
+  },
+  {
+    id: 15, name: "Brooklyn Bridge Park Padel",
+    sport: "padel", location: "outdoor", surface: "hard", access: "free",
+    address: "Pier 2, Brooklyn Bridge Park, Brooklyn, NY 11201",
+    lat: 40.6963, lng: -73.9980, borough: "Brooklyn", courts: 2
+  },
+  {
+    id: 16, name: "Canarsie Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "Flatbush Ave & Rockaway Pkwy, Brooklyn, NY 11236",
+    lat: 40.6306, lng: -73.9017, borough: "Brooklyn", courts: 5
+  },
+  {
+    id: 17, name: "Betsy Head Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "Livonia Ave & Strauss St, Brooklyn, NY 11212",
+    lat: 40.6706, lng: -73.9030, borough: "Brooklyn", courts: 4
+  },
+  {
+    id: 18, name: "Bushwick Padel Studio",
+    sport: "padel", location: "indoor", surface: "hard", access: "free",
+    address: "50 Wyckoff Ave, Brooklyn, NY 11237",
+    lat: 40.7044, lng: -73.9203, borough: "Brooklyn", courts: 3
+  },
+
+  // ── QUEENS (7) ──────────────────────────────────────────
+  {
+    id: 19, name: "USTA Billie Jean King National Tennis Center",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
+    address: "Flushing Meadows–Corona Park, Queens, NY 11368",
+    lat: 40.7519, lng: -73.8467, borough: "Queens", courts: 22
+  },
+  {
+    id: 20, name: "Forest Park Tennis Courts",
+    sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
+    address: "Forest Park Dr, Woodhaven, NY 11421",
+    lat: 40.7007, lng: -73.8525, borough: "Queens", courts: 8
+  },
+  {
+    id: 21, name: "Flushing Meadows Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
+    address: "111th St, Flushing Meadows–Corona Park, Queens, NY 11368",
+    lat: 40.7445, lng: -73.8430, borough: "Queens", courts: 12
+  },
+  {
+    id: 22, name: "Juniper Valley Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "Juniper Valley Park, Middle Village, NY 11379",
+    lat: 40.7206, lng: -73.8703, borough: "Queens", courts: 4
+  },
+  {
+    id: 23, name: "Kissena Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
+    address: "164-02 Kissena Blvd, Flushing, NY 11358",
+    lat: 40.7439, lng: -73.8249, borough: "Queens", courts: 6
+  },
+  {
+    id: 24, name: "Springfield Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "179-79 Brookville Blvd, Springfield Gardens, NY 11413",
+    lat: 40.6631, lng: -73.7545, borough: "Queens", courts: 4
+  },
+  {
+    id: 25, name: "Queens Padel Center",
+    sport: "padel", location: "indoor", surface: "hard", access: "free",
+    address: "35-10 Junction Blvd, Jackson Heights, NY 11372",
+    lat: 40.7463, lng: -73.8887, borough: "Queens", courts: 4
+  },
+
+  // ── BRONX (5) ───────────────────────────────────────────
+  {
+    id: 26, name: "Crotona Park Tennis Courts",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "Crotona Ave & Fulton Ave, Bronx, NY 10457",
+    lat: 40.8327, lng: -73.8998, borough: "Bronx", courts: 8
+  },
+  {
+    id: 27, name: "Van Cortlandt Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
+    address: "Broadway & W 242nd St, Bronx, NY 10471",
+    lat: 40.8892, lng: -73.8866, borough: "Bronx", courts: 10
+  },
+  {
+    id: 28, name: "Pelham Bay Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "Pelham Bay Park, Bruckner Blvd, Bronx, NY 10461",
+    lat: 40.8690, lng: -73.8182, borough: "Bronx", courts: 6
+  },
+  {
+    id: 29, name: "Mullaly Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "161st St & Jerome Ave, Bronx, NY 10452",
+    lat: 40.8308, lng: -73.9270, borough: "Bronx", courts: 4
+  },
+  {
+    id: 30, name: "Bronx Padel & Racquet Club",
+    sport: "padel", location: "indoor", surface: "hard", access: "free",
+    address: "700 E Tremont Ave, Bronx, NY 10457",
+    lat: 40.8476, lng: -73.8798, borough: "Bronx", courts: 4
+  },
+];
+
+// ════════════════════════════════════════════════════════════
+// MAP
+// ════════════════════════════════════════════════════════════
+const map = L.map('map', { zoomControl: true }).setView([40.730, -73.950], 11);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  maxZoom: 19
+}).addTo(map);
+
+// ── Custom SVG pin icons ─────────────────────────────────────
+function makePinIcon(fillColor) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">
+    <path fill="${fillColor}" stroke="rgba(0,0,0,0.18)" stroke-width="1"
+      d="M14 1C6.82 1 1 6.82 1 14c0 10.5 13 23 13 23S27 24.5 27 14C27 6.82 21.18 1 14 1z"/>
+    <circle fill="white" cx="14" cy="13.5" r="5.5"/>
+  </svg>`;
+  return L.divIcon({
+    html: svg,
+    className: '',
+    iconSize: [28, 38],
+    iconAnchor: [14, 38],
+    popupAnchor: [0, -40]
+  });
+}
+
+const ICONS = {
+  tennis: makePinIcon('#2563EB'),
+  padel:  makePinIcon('#7C3AED'),
+};
+
+// ── Build markers ────────────────────────────────────────────
+const markers = courts.map(c => {
+  const m = L.marker([c.lat, c.lng], { icon: ICONS[c.sport] }).addTo(map);
+
+  const sportLabel  = c.sport.charAt(0).toUpperCase() + c.sport.slice(1);
+  const locLabel    = c.location.charAt(0).toUpperCase() + c.location.slice(1);
+  const surfLabel   = c.surface.charAt(0).toUpperCase() + c.surface.slice(1);
+  const accessLabel = c.access === 'free' ? 'Free / First come first serve' : 'NYC Parks Permit Required';
+  const sportColor  = c.sport === 'tennis' ? '#2563EB' : '#7C3AED';
+
+  m.bindPopup(`
+    <div style="min-width:210px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">
+        <div style="width:10px;height:10px;border-radius:50%;background:${sportColor};margin-top:3px;flex-shrink:0"></div>
+        <div style="font-weight:700;font-size:14px;color:#111;line-height:1.3">${c.name}</div>
+      </div>
+      <table style="font-size:12.5px;color:#555;border-collapse:collapse;width:100%">
+        <tr>
+          <td style="padding:3px 10px 3px 0;color:#aaa;white-space:nowrap;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Sport</td>
+          <td style="padding:3px 0;font-weight:600;color:#333">${sportLabel}</td>
+        </tr>
+        <tr>
+          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Location</td>
+          <td style="padding:3px 0">${locLabel}</td>
+        </tr>
+        <tr>
+          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Surface</td>
+          <td style="padding:3px 0">${surfLabel}</td>
+        </tr>
+        <tr>
+          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top">Access</td>
+          <td style="padding:3px 0">${accessLabel}</td>
+        </tr>
+        <tr>
+          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Borough</td>
+          <td style="padding:3px 0">${c.borough}</td>
+        </tr>
+        <tr>
+          <td style="padding:5px 10px 0 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top">Address</td>
+          <td style="padding:5px 0;color:#666;line-height:1.4">${c.address}</td>
+        </tr>
+      </table>
+    </div>
+  `);
+
+  m._court = c;
+  return m;
+});
+
+// ════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════
+const state = {
+  filters: {
+    sport:    new Set(['tennis', 'padel']),
+    location: new Set(['outdoor', 'indoor']),
+    surface:  new Set(['hard', 'clay', 'grass', 'unknown']),
+    access:   new Set(['free', 'permit']),
+  },
+  search: '',
+  driveFilter: null,       // null | { lat, lng, maxMinutes }
+  selectedMinutes: 15,
+  pendingCoords: null,     // coords from geolocation, used when button clicked
+};
+
+// ════════════════════════════════════════════════════════════
+// HAVERSINE / DRIVE-TIME ESTIMATE
+// ════════════════════════════════════════════════════════════
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371, toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat/2)**2
+    + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// NYC avg speed ~20 km/h in traffic; circuity factor 1.4 for grid streets
+function estDriveMinutes(lat1, lng1, lat2, lng2) {
+  return haversineKm(lat1, lng1, lat2, lng2) * 1.4 / 20 * 60;
+}
+
+// ════════════════════════════════════════════════════════════
+// FILTER ENGINE
+// ════════════════════════════════════════════════════════════
+function applyFilters() {
+  let shown = 0;
+  markers.forEach(m => {
+    const c = m._court;
+    const ok =
+      state.filters.sport.has(c.sport) &&
+      state.filters.location.has(c.location) &&
+      state.filters.surface.has(c.surface) &&
+      state.filters.access.has(c.access) &&
+      c.name.toLowerCase().includes(state.search.toLowerCase()) &&
+      (!state.driveFilter || estDriveMinutes(
+        state.driveFilter.lat, state.driveFilter.lng, c.lat, c.lng
+      ) <= state.driveFilter.maxMinutes);
+
+    if (ok) { m.addTo(map); shown++; }
+    else     { map.removeLayer(m); }
+  });
+  document.getElementById('courtCount').textContent = shown;
+}
+
+// ════════════════════════════════════════════════════════════
+// SEARCH
+// ════════════════════════════════════════════════════════════
+document.getElementById('searchInput').addEventListener('input', e => {
+  state.search = e.target.value;
+  applyFilters();
+});
+
+// ════════════════════════════════════════════════════════════
+// FILTER CHECKBOXES
+// ════════════════════════════════════════════════════════════
+document.querySelectorAll('input[data-filter]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const group = state.filters[cb.dataset.filter];
+    cb.checked ? group.add(cb.value) : group.delete(cb.value);
+    applyFilters();
+  });
+});
+
+// ════════════════════════════════════════════════════════════
+// RESET ALL FILTERS
+// ════════════════════════════════════════════════════════════
+document.getElementById('resetFilters').addEventListener('click', () => {
+  // Reset filter sets
+  state.filters.sport    = new Set(['tennis', 'padel']);
+  state.filters.location = new Set(['outdoor', 'indoor']);
+  state.filters.surface  = new Set(['hard', 'clay', 'grass', 'unknown']);
+  state.filters.access   = new Set(['free', 'permit']);
+  state.search = '';
+  state.driveFilter = null;
+  state.pendingCoords = null;
+
+  // Reset UI
+  document.querySelectorAll('input[data-filter]').forEach(cb => cb.checked = true);
+  document.getElementById('searchInput').value = '';
+  document.getElementById('addressInput').value = '';
+
+  const status = document.getElementById('driveStatus');
+  status.style.display = 'none';
+
+  if (window._originMarker) { map.removeLayer(window._originMarker); window._originMarker = null; }
+
+  applyFilters();
+});
+
+// ════════════════════════════════════════════════════════════
+// DRIVE TIME BUTTONS
+// ════════════════════════════════════════════════════════════
+document.querySelectorAll('.drive-time-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.drive-time-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.selectedMinutes = parseInt(btn.dataset.minutes);
+    // If drive filter is active, re-apply with new time
+    if (state.driveFilter) {
+      state.driveFilter.maxMinutes = state.selectedMinutes;
+      applyFilters();
+      showDriveStatus(`Showing courts within ~${state.selectedMinutes} min drive.`, 'success');
+    }
+  });
+});
+
+// ════════════════════════════════════════════════════════════
+// USE MY LOCATION
+// ════════════════════════════════════════════════════════════
+document.getElementById('useLocationBtn').addEventListener('click', () => {
+  if (!navigator.geolocation) {
+    showDriveStatus('Geolocation is not supported by your browser.', 'error');
+    return;
+  }
+  showDriveStatus('Getting your location…', '');
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      state.pendingCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      document.getElementById('addressInput').value = 'My current location';
+      showDriveStatus('Location found! Click "Filter by drive time" to apply.', 'success');
+    },
+    () => {
+      state.pendingCoords = null;
+      showDriveStatus('Could not get your location. Try entering an address instead.', 'error');
+    }
+  );
+});
+
+// Clear pending coords if user edits the address
+document.getElementById('addressInput').addEventListener('input', () => {
+  state.pendingCoords = null;
+});
+
+// ════════════════════════════════════════════════════════════
+// GEOCODE + APPLY DRIVE FILTER
+// ════════════════════════════════════════════════════════════
+document.getElementById('filterDriveBtn').addEventListener('click', async () => {
+  // Use geolocation result if available
+  if (state.pendingCoords) {
+    applyDriveFilter(state.pendingCoords.lat, state.pendingCoords.lng, 'your location');
+    return;
+  }
+
+  const addr = document.getElementById('addressInput').value.trim();
+  if (!addr) {
+    showDriveStatus('Enter an address or tap "Use my location" first.', 'error');
+    return;
+  }
+
+  showDriveStatus('Locating address…', '');
+
+  try {
+    const url = 'https://nominatim.openstreetmap.org/search?'
+      + new URLSearchParams({ q: addr, format: 'json', limit: '1', countrycodes: 'us' });
+    const res  = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+    const data = await res.json();
+    if (!data.length) throw new Error('not found');
+
+    const { lat, lon, display_name } = data[0];
+    const shortName = display_name.split(',')[0];
+    applyDriveFilter(parseFloat(lat), parseFloat(lon), shortName);
+  } catch {
+    showDriveStatus('Address not found. Try adding "New York, NY" or be more specific.', 'error');
+  }
+});
+
+function applyDriveFilter(lat, lng, label) {
+  state.driveFilter = { lat, lng, maxMinutes: state.selectedMinutes };
+  applyFilters();
+
+  // Origin marker
+  if (window._originMarker) map.removeLayer(window._originMarker);
+  window._originMarker = L.marker([lat, lng], {
+    icon: L.divIcon({
+      html: `<div style="
+        width:16px;height:16px;border-radius:50%;
+        background:#f59e0b;border:3px solid #fff;
+        box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div>`,
+      className: '',
+      iconSize: [16, 16],
+      iconAnchor: [8, 8],
+    })
+  }).addTo(map).bindPopup(`<b>Your origin</b><br>${label}`);
+
+  map.setView([lat, lng], 12);
+
+  const count = parseInt(document.getElementById('courtCount').textContent);
+  showDriveStatus(
+    `${count} court${count !== 1 ? 's' : ''} within ~${state.selectedMinutes} min drive of <b>${label}</b>.
+    <span class="clear-drive" id="clearDrive">Clear</span>`,
+    'success'
+  );
+
+  document.getElementById('clearDrive')?.addEventListener('click', () => {
+    state.driveFilter = null;
+    if (window._originMarker) { map.removeLayer(window._originMarker); window._originMarker = null; }
+    document.getElementById('addressInput').value = '';
+    state.pendingCoords = null;
+    document.getElementById('driveStatus').style.display = 'none';
+    applyFilters();
+    map.setView([40.730, -73.950], 11);
+  });
+}
+
+function showDriveStatus(html, type) {
+  const el = document.getElementById('driveStatus');
+  el.innerHTML = html;
+  el.className = 'status-msg' + (type ? ' ' + type : '');
+  el.style.display = 'block';
+}
+</script>
+</body>
+</html>
