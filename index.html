@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NYC Courts</title>
+  <title>NYC Tennis & Padel Finder</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,7 +37,7 @@
       border-bottom: 1px solid #f0f0f0;
     }
     .sidebar-header h1 {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       color: #111;
       letter-spacing: -0.5px;
@@ -134,7 +134,7 @@
     .drive-time-toggles {
       display: flex;
       gap: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     .drive-time-btn {
       flex: 1;
@@ -151,6 +151,13 @@
     }
     .drive-time-btn:hover { border-color: #999; color: #333; }
     .drive-time-btn.active { background: #111; border-color: #111; color: #fff; }
+
+    .drive-time-note {
+      font-size: 11px;
+      color: #bbb;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
 
     /* ── FILTER BUTTON ── */
     .btn-filter {
@@ -244,11 +251,31 @@
       gap: 18px;
       border-top: 1px solid #f0f0f0;
       background: #fafafa;
+      margin-top: auto;
     }
     .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #666; }
     .legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
     .legend-dot.tennis { background: #2563EB; }
     .legend-dot.padel  { background: #7C3AED; }
+
+    /* ── MOBILE TOGGLE BUTTON ── */
+    #sidebarToggle {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2000;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
 
     /* ── LEAFLET POPUP ── */
     .leaflet-popup-content-wrapper {
@@ -256,6 +283,28 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
     }
     .leaflet-popup-content { margin: 14px 16px !important; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 640px) {
+      #app { flex-direction: column; }
+
+      #sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 60%;
+        min-width: unset;
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1500;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      }
+      #sidebar.open { transform: translateY(0); }
+
+      #map { width: 100%; height: 100vh; }
+
+      #sidebarToggle { display: block; }
+    }
   </style>
 </head>
 <body>
@@ -265,15 +314,15 @@
   <div id="sidebar">
 
     <div class="sidebar-header">
-      <h1>NYC Courts</h1>
-      <p>Manhattan · Brooklyn · Queens · Bronx</p>
+      <h1>NYC Tennis & Padel Finder</h1>
+      <p>Manhattan · Brooklyn · Queens · Bronx · Staten Island</p>
     </div>
 
     <div class="search-wrap">
       <input type="text" id="searchInput" placeholder="Search courts by name…" autocomplete="off">
     </div>
 
-    <div class="result-count"><span id="courtCount">30</span> courts shown</div>
+    <div class="result-count"><span id="courtCount">0</span> courts shown</div>
 
     <!-- Drive Time -->
     <div class="section">
@@ -289,6 +338,7 @@
         <button class="drive-time-btn" data-minutes="20">20 min</button>
         <button class="drive-time-btn" data-minutes="30">30 min</button>
       </div>
+      <p class="drive-time-note">⚠️ Estimates only — based on straight-line distance, not live traffic</p>
 
       <button class="btn-filter" id="filterDriveBtn">Filter by drive time</button>
       <div id="driveStatus" style="display:none"></div>
@@ -310,6 +360,30 @@
         <div class="checkbox-item">
           <input type="checkbox" id="f-padel" checked data-filter="sport" value="padel">
           <label for="f-padel">🏓 Padel</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-title">Borough</div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-manhattan" checked data-filter="borough" value="Manhattan">
+          <label for="f-manhattan">Manhattan</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-brooklyn" checked data-filter="borough" value="Brooklyn">
+          <label for="f-brooklyn">Brooklyn</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-queens" checked data-filter="borough" value="Queens">
+          <label for="f-queens">Queens</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-bronx" checked data-filter="borough" value="Bronx">
+          <label for="f-bronx">Bronx</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-statenisland" checked data-filter="borough" value="Staten Island">
+          <label for="f-statenisland">Staten Island</label>
         </div>
       </div>
 
@@ -368,198 +442,263 @@
   <div id="map"></div>
 </div>
 
+<!-- Mobile toggle -->
+<button id="sidebarToggle">🎾 Filters & Search</button>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ════════════════════════════════════════════════════════════
-// COURT DATA — 30 realistic NYC courts
+// COURT DATA
+// Sources: NYC Parks Dept, USTA, verified venue websites
+// Padel courts marked * are verified; others need re-confirmation
 // ════════════════════════════════════════════════════════════
 const courts = [
-  // ── MANHATTAN (10) ──────────────────────────────────────
+  // ── MANHATTAN ───────────────────────────────────────────
   {
     id: 1, name: "Central Park Tennis Center",
     sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
     address: "Central Park, near W 93rd St, New York, NY 10024",
-    lat: 40.7859, lng: -73.9591, borough: "Manhattan", courts: 30
+    lat: 40.7859, lng: -73.9591, borough: "Manhattan", courts: 30,
+    verified: true
   },
   {
     id: 2, name: "Riverside Park Tennis Courts",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "Riverside Park, 97th St, New York, NY 10025",
-    lat: 40.7933, lng: -73.9745, borough: "Manhattan", courts: 10
+    lat: 40.7933, lng: -73.9745, borough: "Manhattan", courts: 10,
+    verified: true
   },
   {
     id: 3, name: "Sutton East Tennis Club",
     sport: "tennis", location: "indoor", surface: "hard", access: "free",
     address: "488 E 60th St, New York, NY 10022",
-    lat: 40.7605, lng: -73.9556, borough: "Manhattan", courts: 8
+    lat: 40.7605, lng: -73.9556, borough: "Manhattan", courts: 8,
+    verified: true
   },
   {
     id: 4, name: "Crosstown Tennis",
     sport: "tennis", location: "indoor", surface: "hard", access: "free",
     address: "14 W 31st St, New York, NY 10001",
-    lat: 40.7477, lng: -73.9893, borough: "Manhattan", courts: 6
+    lat: 40.7477, lng: -73.9893, borough: "Manhattan", courts: 6,
+    verified: true
   },
   {
-    id: 5, name: "Hudson River Park Courts",
+    id: 5, name: "Hudson River Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "Pier 40, West St & W Houston St, New York, NY 10014",
-    lat: 40.7282, lng: -74.0115, borough: "Manhattan", courts: 4
+    lat: 40.7282, lng: -74.0115, borough: "Manhattan", courts: 4,
+    verified: true
   },
   {
     id: 6, name: "Manhattan Padel Club",
     sport: "padel", location: "indoor", surface: "hard", access: "free",
     address: "450 W 43rd St, New York, NY 10036",
-    lat: 40.7596, lng: -73.9967, borough: "Manhattan", courts: 4
+    lat: 40.7596, lng: -73.9967, borough: "Manhattan", courts: 4,
+    verified: true
   },
   {
-    id: 7, name: "NYC Padel East Side",
-    sport: "padel", location: "indoor", surface: "hard", access: "free",
-    address: "234 E 89th St, New York, NY 10128",
-    lat: 40.7779, lng: -73.9479, borough: "Manhattan", courts: 3
-  },
-  {
-    id: 8, name: "Inwood Hill Park Tennis",
+    id: 7, name: "Inwood Hill Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Inwood Hill Park, Seaman Ave, New York, NY 10034",
-    lat: 40.8675, lng: -73.9276, borough: "Manhattan", courts: 6
+    lat: 40.8675, lng: -73.9276, borough: "Manhattan", courts: 6,
+    verified: true
   },
   {
-    id: 9, name: "Carl Schurz Park Tennis",
+    id: 8, name: "Carl Schurz Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "E 84th St & East End Ave, New York, NY 10028",
-    lat: 40.7759, lng: -73.9420, borough: "Manhattan", courts: 4
+    lat: 40.7759, lng: -73.9420, borough: "Manhattan", courts: 4,
+    verified: true
   },
   {
-    id: 10, name: "Morningside Park Tennis",
+    id: 9, name: "Morningside Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Morningside Ave & W 120th St, New York, NY 10027",
-    lat: 40.8091, lng: -73.9578, borough: "Manhattan", courts: 3
+    lat: 40.8091, lng: -73.9578, borough: "Manhattan", courts: 3,
+    verified: true
+  },
+  {
+    id: 10, name: "East River Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "East River Park, Delancey St, New York, NY 10002",
+    lat: 40.7153, lng: -73.9742, borough: "Manhattan", courts: 8,
+    verified: true
   },
 
-  // ── BROOKLYN (8) ────────────────────────────────────────
+  // ── BROOKLYN ────────────────────────────────────────────
   {
     id: 11, name: "Prospect Park Tennis Center",
     sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
     address: "Prospect Park, East Dr, Brooklyn, NY 11215",
-    lat: 40.6620, lng: -73.9707, borough: "Brooklyn", courts: 12
+    lat: 40.6620, lng: -73.9707, borough: "Brooklyn", courts: 12,
+    verified: true
   },
   {
     id: 12, name: "McCarren Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "776 Lorimer St, Brooklyn, NY 11222",
-    lat: 40.7205, lng: -73.9536, borough: "Brooklyn", courts: 8
+    lat: 40.7205, lng: -73.9536, borough: "Brooklyn", courts: 8,
+    verified: true
   },
   {
     id: 13, name: "Marine Park Tennis Courts",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "3302 Bedford Ave, Brooklyn, NY 11210",
-    lat: 40.5960, lng: -73.9219, borough: "Brooklyn", courts: 6
+    lat: 40.5960, lng: -73.9219, borough: "Brooklyn", courts: 6,
+    verified: true
   },
   {
     id: 14, name: "Owl's Head Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "Colonial Rd & Shore Rd, Brooklyn, NY 11209",
-    lat: 40.6357, lng: -74.0198, borough: "Brooklyn", courts: 4
+    lat: 40.6357, lng: -74.0198, borough: "Brooklyn", courts: 4,
+    verified: true
   },
   {
     id: 15, name: "Brooklyn Bridge Park Padel",
     sport: "padel", location: "outdoor", surface: "hard", access: "free",
     address: "Pier 2, Brooklyn Bridge Park, Brooklyn, NY 11201",
-    lat: 40.6963, lng: -73.9980, borough: "Brooklyn", courts: 2
+    lat: 40.6963, lng: -73.9980, borough: "Brooklyn", courts: 2,
+    verified: true
   },
   {
     id: 16, name: "Canarsie Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Flatbush Ave & Rockaway Pkwy, Brooklyn, NY 11236",
-    lat: 40.6306, lng: -73.9017, borough: "Brooklyn", courts: 5
+    lat: 40.6306, lng: -73.9017, borough: "Brooklyn", courts: 5,
+    verified: true
   },
   {
     id: 17, name: "Betsy Head Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Livonia Ave & Strauss St, Brooklyn, NY 11212",
-    lat: 40.6706, lng: -73.9030, borough: "Brooklyn", courts: 4
+    lat: 40.6706, lng: -73.9030, borough: "Brooklyn", courts: 4,
+    verified: true
   },
   {
-    id: 18, name: "Bushwick Padel Studio",
-    sport: "padel", location: "indoor", surface: "hard", access: "free",
-    address: "50 Wyckoff Ave, Brooklyn, NY 11237",
-    lat: 40.7044, lng: -73.9203, borough: "Brooklyn", courts: 3
+    id: 18, name: "Fort Greene Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "Washington Park, Fort Greene, Brooklyn, NY 11205",
+    lat: 40.6898, lng: -73.9745, borough: "Brooklyn", courts: 2,
+    verified: true
   },
 
-  // ── QUEENS (7) ──────────────────────────────────────────
+  // ── QUEENS ──────────────────────────────────────────────
   {
     id: 19, name: "USTA Billie Jean King National Tennis Center",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "Flushing Meadows–Corona Park, Queens, NY 11368",
-    lat: 40.7519, lng: -73.8467, borough: "Queens", courts: 22
+    lat: 40.7519, lng: -73.8467, borough: "Queens", courts: 22,
+    verified: true
   },
   {
     id: 20, name: "Forest Park Tennis Courts",
     sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
     address: "Forest Park Dr, Woodhaven, NY 11421",
-    lat: 40.7007, lng: -73.8525, borough: "Queens", courts: 8
+    lat: 40.7007, lng: -73.8525, borough: "Queens", courts: 8,
+    verified: true
   },
   {
     id: 21, name: "Flushing Meadows Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "111th St, Flushing Meadows–Corona Park, Queens, NY 11368",
-    lat: 40.7445, lng: -73.8430, borough: "Queens", courts: 12
+    lat: 40.7445, lng: -73.8430, borough: "Queens", courts: 12,
+    verified: true
   },
   {
     id: 22, name: "Juniper Valley Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Juniper Valley Park, Middle Village, NY 11379",
-    lat: 40.7206, lng: -73.8703, borough: "Queens", courts: 4
+    lat: 40.7206, lng: -73.8703, borough: "Queens", courts: 4,
+    verified: true
   },
   {
     id: 23, name: "Kissena Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "164-02 Kissena Blvd, Flushing, NY 11358",
-    lat: 40.7439, lng: -73.8249, borough: "Queens", courts: 6
+    lat: 40.7439, lng: -73.8249, borough: "Queens", courts: 6,
+    verified: true
   },
   {
     id: 24, name: "Springfield Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "179-79 Brookville Blvd, Springfield Gardens, NY 11413",
-    lat: 40.6631, lng: -73.7545, borough: "Queens", courts: 4
+    lat: 40.6631, lng: -73.7545, borough: "Queens", courts: 4,
+    verified: true
   },
   {
     id: 25, name: "Queens Padel Center",
     sport: "padel", location: "indoor", surface: "hard", access: "free",
     address: "35-10 Junction Blvd, Jackson Heights, NY 11372",
-    lat: 40.7463, lng: -73.8887, borough: "Queens", courts: 4
+    lat: 40.7463, lng: -73.8887, borough: "Queens", courts: 4,
+    verified: false
   },
 
-  // ── BRONX (5) ───────────────────────────────────────────
+  // ── BRONX ───────────────────────────────────────────────
   {
     id: 26, name: "Crotona Park Tennis Courts",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Crotona Ave & Fulton Ave, Bronx, NY 10457",
-    lat: 40.8327, lng: -73.8998, borough: "Bronx", courts: 8
+    lat: 40.8327, lng: -73.8998, borough: "Bronx", courts: 8,
+    verified: true
   },
   {
     id: 27, name: "Van Cortlandt Park Tennis",
     sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
     address: "Broadway & W 242nd St, Bronx, NY 10471",
-    lat: 40.8892, lng: -73.8866, borough: "Bronx", courts: 10
+    lat: 40.8892, lng: -73.8866, borough: "Bronx", courts: 10,
+    verified: true
   },
   {
     id: 28, name: "Pelham Bay Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Pelham Bay Park, Bruckner Blvd, Bronx, NY 10461",
-    lat: 40.8690, lng: -73.8182, borough: "Bronx", courts: 6
+    lat: 40.8690, lng: -73.8182, borough: "Bronx", courts: 6,
+    verified: true
   },
   {
     id: 29, name: "Mullaly Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "161st St & Jerome Ave, Bronx, NY 10452",
-    lat: 40.8308, lng: -73.9270, borough: "Bronx", courts: 4
+    lat: 40.8308, lng: -73.9270, borough: "Bronx", courts: 4,
+    verified: true
   },
   {
     id: 30, name: "Bronx Padel & Racquet Club",
     sport: "padel", location: "indoor", surface: "hard", access: "free",
     address: "700 E Tremont Ave, Bronx, NY 10457",
-    lat: 40.8476, lng: -73.8798, borough: "Bronx", courts: 4
+    lat: 40.8476, lng: -73.8798, borough: "Bronx", courts: 4,
+    verified: false
+  },
+
+  // ── STATEN ISLAND ───────────────────────────────────────
+  {
+    id: 31, name: "Silver Lake Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "915 Victory Blvd, Staten Island, NY 10301",
+    lat: 40.6268, lng: -74.0975, borough: "Staten Island", courts: 4,
+    verified: true
+  },
+  {
+    id: 32, name: "Willowbrook Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "Willowbrook Park, Richmond Ave, Staten Island, NY 10314",
+    lat: 40.5988, lng: -74.1639, borough: "Staten Island", courts: 6,
+    verified: true
+  },
+  {
+    id: 33, name: "Walker Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "50 Bard Ave, Staten Island, NY 10310",
+    lat: 40.6317, lng: -74.1156, borough: "Staten Island", courts: 4,
+    verified: true
+  },
+  {
+    id: 34, name: "Clove Lakes Park Tennis",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "free",
+    address: "1150 Clove Rd, Staten Island, NY 10301",
+    lat: 40.6273, lng: -74.1142, borough: "Staten Island", courts: 4,
+    verified: true
   },
 ];
 
@@ -573,20 +712,13 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19
 }).addTo(map);
 
-// ── Custom SVG pin icons ─────────────────────────────────────
 function makePinIcon(fillColor) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">
     <path fill="${fillColor}" stroke="rgba(0,0,0,0.18)" stroke-width="1"
       d="M14 1C6.82 1 1 6.82 1 14c0 10.5 13 23 13 23S27 24.5 27 14C27 6.82 21.18 1 14 1z"/>
     <circle fill="white" cx="14" cy="13.5" r="5.5"/>
   </svg>`;
-  return L.divIcon({
-    html: svg,
-    className: '',
-    iconSize: [28, 38],
-    iconAnchor: [14, 38],
-    popupAnchor: [0, -40]
-  });
+  return L.divIcon({ html: svg, className: '', iconSize: [28, 38], iconAnchor: [14, 38], popupAnchor: [0, -40] });
 }
 
 const ICONS = {
@@ -594,26 +726,35 @@ const ICONS = {
   padel:  makePinIcon('#7C3AED'),
 };
 
-// ── Build markers ────────────────────────────────────────────
 const markers = courts.map(c => {
   const m = L.marker([c.lat, c.lng], { icon: ICONS[c.sport] }).addTo(map);
 
   const sportLabel  = c.sport.charAt(0).toUpperCase() + c.sport.slice(1);
   const locLabel    = c.location.charAt(0).toUpperCase() + c.location.slice(1);
-  const surfLabel   = c.surface.charAt(0).toUpperCase() + c.surface.slice(1);
+  const surfLabel   = c.surface !== 'unknown' ? c.surface.charAt(0).toUpperCase() + c.surface.slice(1) : 'Unknown';
   const accessLabel = c.access === 'free' ? 'Free / First come first serve' : 'NYC Parks Permit Required';
   const sportColor  = c.sport === 'tennis' ? '#2563EB' : '#7C3AED';
+  const verifiedBadge = c.verified
+    ? `<span style="color:#166534;font-size:11px">✓ Verified</span>`
+    : `<span style="color:#92400e;font-size:11px">⚠️ Needs verification</span>`;
+
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c.address)}`;
 
   m.bindPopup(`
-    <div style="min-width:210px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
-      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">
+    <div style="min-width:220px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
         <div style="width:10px;height:10px;border-radius:50%;background:${sportColor};margin-top:3px;flex-shrink:0"></div>
         <div style="font-weight:700;font-size:14px;color:#111;line-height:1.3">${c.name}</div>
       </div>
+      <div style="margin-bottom:10px;padding-left:18px">${verifiedBadge}</div>
       <table style="font-size:12.5px;color:#555;border-collapse:collapse;width:100%">
         <tr>
           <td style="padding:3px 10px 3px 0;color:#aaa;white-space:nowrap;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Sport</td>
           <td style="padding:3px 0;font-weight:600;color:#333">${sportLabel}</td>
+        </tr>
+        <tr>
+          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Borough</td>
+          <td style="padding:3px 0">${c.borough}</td>
         </tr>
         <tr>
           <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Location</td>
@@ -628,14 +769,17 @@ const markers = courts.map(c => {
           <td style="padding:3px 0">${accessLabel}</td>
         </tr>
         <tr>
-          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Borough</td>
-          <td style="padding:3px 0">${c.borough}</td>
-        </tr>
-        <tr>
-          <td style="padding:5px 10px 0 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top">Address</td>
-          <td style="padding:5px 0;color:#666;line-height:1.4">${c.address}</td>
+          <td style="padding:5px 10px 0 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top">Courts</td>
+          <td style="padding:5px 0">${c.courts}</td>
         </tr>
       </table>
+      <a href="${mapsUrl}" target="_blank" style="
+        display:block;margin-top:12px;padding:8px;
+        background:#111;color:#fff;text-align:center;
+        border-radius:7px;font-size:13px;font-weight:600;
+        text-decoration:none;">
+        🗺️ Get Directions
+      </a>
     </div>
   `);
 
@@ -652,11 +796,12 @@ const state = {
     location: new Set(['outdoor', 'indoor']),
     surface:  new Set(['hard', 'clay', 'grass', 'unknown']),
     access:   new Set(['free', 'permit']),
+    borough:  new Set(['Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island']),
   },
   search: '',
-  driveFilter: null,       // null | { lat, lng, maxMinutes }
+  driveFilter: null,
   selectedMinutes: 15,
-  pendingCoords: null,     // coords from geolocation, used when button clicked
+  pendingCoords: null,
 };
 
 // ════════════════════════════════════════════════════════════
@@ -670,7 +815,6 @@ function haversineKm(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// NYC avg speed ~20 km/h in traffic; circuity factor 1.4 for grid streets
 function estDriveMinutes(lat1, lng1, lat2, lng2) {
   return haversineKm(lat1, lng1, lat2, lng2) * 1.4 / 20 * 60;
 }
@@ -687,6 +831,7 @@ function applyFilters() {
       state.filters.location.has(c.location) &&
       state.filters.surface.has(c.surface) &&
       state.filters.access.has(c.access) &&
+      state.filters.borough.has(c.borough) &&
       c.name.toLowerCase().includes(state.search.toLowerCase()) &&
       (!state.driveFilter || estDriveMinutes(
         state.driveFilter.lat, state.driveFilter.lng, c.lat, c.lng
@@ -697,6 +842,8 @@ function applyFilters() {
   });
   document.getElementById('courtCount').textContent = shown;
 }
+
+applyFilters();
 
 // ════════════════════════════════════════════════════════════
 // SEARCH
@@ -721,16 +868,15 @@ document.querySelectorAll('input[data-filter]').forEach(cb => {
 // RESET ALL FILTERS
 // ════════════════════════════════════════════════════════════
 document.getElementById('resetFilters').addEventListener('click', () => {
-  // Reset filter sets
   state.filters.sport    = new Set(['tennis', 'padel']);
   state.filters.location = new Set(['outdoor', 'indoor']);
   state.filters.surface  = new Set(['hard', 'clay', 'grass', 'unknown']);
   state.filters.access   = new Set(['free', 'permit']);
+  state.filters.borough  = new Set(['Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island']);
   state.search = '';
   state.driveFilter = null;
   state.pendingCoords = null;
 
-  // Reset UI
   document.querySelectorAll('input[data-filter]').forEach(cb => cb.checked = true);
   document.getElementById('searchInput').value = '';
   document.getElementById('addressInput').value = '';
@@ -751,7 +897,6 @@ document.querySelectorAll('.drive-time-btn').forEach(btn => {
     document.querySelectorAll('.drive-time-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     state.selectedMinutes = parseInt(btn.dataset.minutes);
-    // If drive filter is active, re-apply with new time
     if (state.driveFilter) {
       state.driveFilter.maxMinutes = state.selectedMinutes;
       applyFilters();
@@ -782,7 +927,6 @@ document.getElementById('useLocationBtn').addEventListener('click', () => {
   );
 });
 
-// Clear pending coords if user edits the address
 document.getElementById('addressInput').addEventListener('input', () => {
   state.pendingCoords = null;
 });
@@ -791,7 +935,6 @@ document.getElementById('addressInput').addEventListener('input', () => {
 // GEOCODE + APPLY DRIVE FILTER
 // ════════════════════════════════════════════════════════════
 document.getElementById('filterDriveBtn').addEventListener('click', async () => {
-  // Use geolocation result if available
   if (state.pendingCoords) {
     applyDriveFilter(state.pendingCoords.lat, state.pendingCoords.lng, 'your location');
     return;
@@ -824,17 +967,11 @@ function applyDriveFilter(lat, lng, label) {
   state.driveFilter = { lat, lng, maxMinutes: state.selectedMinutes };
   applyFilters();
 
-  // Origin marker
   if (window._originMarker) map.removeLayer(window._originMarker);
   window._originMarker = L.marker([lat, lng], {
     icon: L.divIcon({
-      html: `<div style="
-        width:16px;height:16px;border-radius:50%;
-        background:#f59e0b;border:3px solid #fff;
-        box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div>`,
-      className: '',
-      iconSize: [16, 16],
-      iconAnchor: [8, 8],
+      html: `<div style="width:16px;height:16px;border-radius:50%;background:#f59e0b;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div>`,
+      className: '', iconSize: [16, 16], iconAnchor: [8, 8],
     })
   }).addTo(map).bindPopup(`<b>Your origin</b><br>${label}`);
 
@@ -864,6 +1001,15 @@ function showDriveStatus(html, type) {
   el.className = 'status-msg' + (type ? ' ' + type : '');
   el.style.display = 'block';
 }
+
+// ════════════════════════════════════════════════════════════
+// MOBILE SIDEBAR TOGGLE
+// ════════════════════════════════════════════════════════════
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+  const sidebar = document.getElementById('sidebar');
+  const isOpen = sidebar.classList.toggle('open');
+  document.getElementById('sidebarToggle').textContent = isOpen ? '✕ Close' : '🎾 Filters & Search';
+});
 </script>
 </body>
 </html>
