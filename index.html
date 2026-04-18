@@ -9,27 +9,33 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 
-    #app { display: flex; height: 100vh; }
+    #app { position: relative; width: 100%; height: 100vh; }
 
-    /* ── SIDEBAR ── */
+    /* ── MAP — always full screen ── */
+    #map { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    /* ── SIDEBAR — bottom sheet ── */
     #sidebar {
-      width: 300px;
-      min-width: 300px;
-      height: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-height: 72vh;
       background: #fff;
-      box-shadow: 2px 0 16px rgba(0,0,0,0.12);
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
       z-index: 1000;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
+      border-radius: 20px 20px 0 0;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    #sidebar.open { transform: translateY(0); }
 
     #sidebar::-webkit-scrollbar { width: 4px; }
     #sidebar::-webkit-scrollbar-track { background: transparent; }
     #sidebar::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 2px; }
-
-    /* ── MAP ── */
-    #map { flex: 1; height: 100%; }
 
     /* ── HEADER ── */
     .sidebar-header {
@@ -284,24 +290,36 @@
     .legend-dot.tennis { background: #2563EB; }
     .legend-dot.padel  { background: #7C3AED; }
 
-    /* ── MOBILE TOGGLE BUTTON ── */
+    /* ── BOTTOM TOGGLE BUTTON ── */
     #sidebarToggle {
-      display: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       position: fixed;
-      bottom: 20px;
+      bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 2000;
       background: #111;
       color: #fff;
       border: none;
-      border-radius: 24px;
-      padding: 12px 22px;
+      border-radius: 28px;
+      padding: 13px 24px;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+      transition: background 0.15s, bottom 0.35s cubic-bezier(0.4,0,0.2,1);
+      white-space: nowrap;
     }
+    #sidebarToggle:hover { background: #333; }
+    #toggleArrow {
+      font-size: 13px;
+      transition: transform 0.3s ease;
+      display: inline-block;
+    }
+    #sidebarToggle.panel-open #toggleArrow { transform: rotate(180deg); }
+    #sidebarToggle.panel-open { bottom: calc(72vh + 16px); }
 
     /* ── WEATHER WIDGET ── */
     #weatherWidget {
@@ -347,26 +365,14 @@
     }
     .leaflet-popup-content { margin: 14px 16px !important; }
 
-    /* ── MOBILE ── */
-    @media (max-width: 640px) {
-      #app { flex-direction: column; }
-
-      #sidebar {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%;
-        height: 60%;
-        min-width: unset;
-        transform: translateY(-100%);
-        transition: transform 0.3s ease;
-        z-index: 1500;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      }
-      #sidebar.open { transform: translateY(0); }
-
-      #map { width: 100%; height: 100vh; }
-
-      #sidebarToggle { display: block; }
+    /* ── DRAG HANDLE ── */
+    .drag-handle {
+      width: 40px;
+      height: 4px;
+      background: #ddd;
+      border-radius: 2px;
+      margin: 10px auto 0;
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -375,6 +381,7 @@
 
   <!-- ══════════════ SIDEBAR ══════════════ -->
   <div id="sidebar">
+    <div class="drag-handle"></div>
 
     <div class="sidebar-header">
       <h1>NYC Tennis & Padel Finder</h1>
@@ -548,8 +555,9 @@
   <div id="map"></div>
 </div>
 
-<!-- Mobile toggle -->
-<button id="sidebarToggle">🎾 Filters & Search</button>
+<button id="sidebarToggle">
+  <span id="toggleArrow">▲</span> 🎾 Filters & Search
+</button>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -1257,8 +1265,9 @@ document.querySelectorAll('.filter-group-title').forEach(title => {
 // ════════════════════════════════════════════════════════════
 document.getElementById('sidebarToggle').addEventListener('click', () => {
   const sidebar = document.getElementById('sidebar');
+  const btn = document.getElementById('sidebarToggle');
   const isOpen = sidebar.classList.toggle('open');
-  document.getElementById('sidebarToggle').textContent = isOpen ? '✕ Close' : '🎾 Filters & Search';
+  btn.classList.toggle('panel-open', isOpen);
 });
 
 // ════════════════════════════════════════════════════════════
