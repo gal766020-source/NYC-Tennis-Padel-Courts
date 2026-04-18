@@ -217,6 +217,58 @@
     }
     .reset-link:hover { color: #111; }
 
+    /* ── SIDE-BY-SIDE FILTER ROW (Sport + Location) ── */
+    .filter-row {
+      display: flex;
+      gap: 0;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .filter-col { flex: 1; padding: 0 4px; }
+    .filter-col-divider {
+      width: 1px;
+      background: #f0f0f0;
+      margin: 0 8px;
+      flex-shrink: 0;
+    }
+    .filter-col-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: #bbb;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* ── CHIP-STYLE CHECKBOXES (Surface + Borough) ── */
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding-bottom: 4px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border: 1.5px solid #e2e2e2;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .chip:hover { border-color: #999; color: #222; }
+    .chip input[type="checkbox"] { display: none; }
+    .chip:has(input:checked) {
+      background: #111;
+      border-color: #111;
+      color: #fff;
+    }
+
     .filter-group { border-bottom: 1px solid #f0f0f0; }
     .filter-group:last-child { border-bottom: none; }
     .filter-group-title {
@@ -435,12 +487,10 @@
         <span class="reset-link" id="resetFilters">Reset all</span>
       </div>
 
-      <div class="filter-group open">
-        <div class="filter-group-title">
-          <span>Sport</span>
-          <span class="filter-group-arrow">▼</span>
-        </div>
-        <div class="filter-group-body">
+      <!-- Row 1: Sport + Location side by side -->
+      <div class="filter-row">
+        <div class="filter-col">
+          <div class="filter-col-title">Sport</div>
           <div class="checkbox-item">
             <input type="checkbox" id="f-tennis" checked data-filter="sport" value="tennis">
             <label for="f-tennis">🎾 Tennis</label>
@@ -450,76 +500,73 @@
             <label for="f-padel">🏓 Padel</label>
           </div>
         </div>
-      </div>
-
-      <div class="filter-group open">
-        <div class="filter-group-title">
-          <span>Borough</span>
-          <span class="filter-group-arrow">▼</span>
-        </div>
-        <div class="filter-group-body">
-          <div class="checkbox-item">
-            <input type="checkbox" id="f-manhattan" checked data-filter="borough" value="Manhattan">
-            <label for="f-manhattan">Manhattan</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="f-brooklyn" checked data-filter="borough" value="Brooklyn">
-            <label for="f-brooklyn">Brooklyn</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="f-queens" checked data-filter="borough" value="Queens">
-            <label for="f-queens">Queens</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="f-bronx" checked data-filter="borough" value="Bronx">
-            <label for="f-bronx">Bronx</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="f-statenisland" checked data-filter="borough" value="Staten Island">
-            <label for="f-statenisland">Staten Island</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <div class="filter-group-title">
-          <span>Location</span>
-          <span class="filter-group-arrow">▼</span>
-        </div>
-        <div class="filter-group-body">
+        <div class="filter-col-divider"></div>
+        <div class="filter-col">
+          <div class="filter-col-title">Location</div>
           <div class="checkbox-item">
             <input type="checkbox" id="f-outdoor" checked data-filter="location" value="outdoor">
-            <label for="f-outdoor">Outdoor</label>
+            <label for="f-outdoor">🌤️ Outdoor</label>
           </div>
           <div class="checkbox-item">
             <input type="checkbox" id="f-indoor" checked data-filter="location" value="indoor">
-            <label for="f-indoor">Indoor</label>
+            <label for="f-indoor">🏠 Indoor</label>
           </div>
         </div>
       </div>
 
+      <!-- Row 2: Surface -->
       <div class="filter-group">
         <div class="filter-group-title">
           <span>Surface</span>
           <span class="filter-group-arrow">▼</span>
         </div>
-        <div class="filter-group-body">
-          <div class="checkbox-item">
+        <div class="filter-group-body filter-chips">
+          <label class="chip">
             <input type="checkbox" id="f-hard" checked data-filter="surface" value="hard">
-            <label for="f-hard">Hard</label>
-          </div>
-          <div class="checkbox-item">
+            <span>Hard</span>
+          </label>
+          <label class="chip">
             <input type="checkbox" id="f-clay" checked data-filter="surface" value="clay">
-            <label for="f-clay">Clay</label>
-          </div>
-          <div class="checkbox-item">
+            <span>Clay</span>
+          </label>
+          <label class="chip">
             <input type="checkbox" id="f-grass" checked data-filter="surface" value="grass">
-            <label for="f-grass">Grass</label>
-          </div>
-          <div class="checkbox-item">
+            <span>Grass</span>
+          </label>
+          <label class="chip">
             <input type="checkbox" id="f-unknown" checked data-filter="surface" value="unknown">
-            <label for="f-unknown">Unknown</label>
-          </div>
+            <span>Unknown</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Row 3: Borough collapsible -->
+      <div class="filter-group">
+        <div class="filter-group-title">
+          <span>Borough</span>
+          <span class="filter-group-arrow">▼</span>
+        </div>
+        <div class="filter-group-body filter-chips">
+          <label class="chip">
+            <input type="checkbox" id="f-manhattan" checked data-filter="borough" value="Manhattan">
+            <span>Manhattan</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" id="f-brooklyn" checked data-filter="borough" value="Brooklyn">
+            <span>Brooklyn</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" id="f-queens" checked data-filter="borough" value="Queens">
+            <span>Queens</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" id="f-bronx" checked data-filter="borough" value="Bronx">
+            <span>Bronx</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" id="f-statenisland" checked data-filter="borough" value="Staten Island">
+            <span>Staten Island</span>
+          </label>
         </div>
       </div>
 
