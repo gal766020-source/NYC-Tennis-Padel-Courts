@@ -1,17 +1,21 @@
 """
 fetch_courts.py
 ---------------
-Fetches NYC tennis & padel court data from Geoapify Places API (backed by OpenStreetMap).
-If the live API is unavailable, falls back to the curated FALLBACK_COURTS dataset.
-Cleans and outputs data to courts_data.json for the web app to consume.
+Fetches NYC tennis & padel court data from two live APIs:
+  1. NYC Open Data — official NYC Parks athletic facilities (tennis courts)
+  2. Geoapify Places API — padel courts + private clubs not in NYC Parks data
+Falls back to FALLBACK_COURTS curated dataset if both APIs are unavailable.
 
-Data source: Geoapify Places API (geoapify.com) — category sport.pitch
+Data sources:
+  NYC Open Data: data.cityofnewyork.us (no API key needed)
+  Geoapify:      geoapify.com (API key required)
 Run manually:  python3 fetch_courts.py
 Run via CI/CD: GitHub Actions (.github/workflows/update_courts.yml)
 """
 
 import json
 import urllib.request
+import urllib.parse
 import os
 from datetime import datetime, timezone
 
@@ -76,6 +80,110 @@ FALLBACK_COURTS = [
     {"id":33,"name":"Walker Park Tennis","sport":"tennis","location":"outdoor","surface":"hard","access":"free","address":"50 Bard Ave, Staten Island, NY 10310","lat":40.6317,"lng":-74.1156,"borough":"Staten Island","courts":4,"verified":True},
     {"id":34,"name":"Clove Lakes Park Tennis","sport":"tennis","location":"outdoor","surface":"hard","access":"free","address":"1150 Clove Rd, Staten Island, NY 10301","lat":40.6273,"lng":-74.1142,"borough":"Staten Island","courts":4,"verified":True},
 ]
+
+
+NYC_BOROUGH_MAP = {"B": "Brooklyn", "Q": "Queens", "M": "Manhattan", "X": "Bronx", "R": "Staten Island"}
+
+
+def _polygon_centroid(multipolygon):
+    """Compute centroid lat/lng from a GeoJSON MultiPolygon."""
+    try:
+        coords = multipolygon["coordinates"][0][0]
+        lats = [c[1] for c in coords]
+        lngs = [c[0] for c in coords]
+        return round(sum(lats) / len(lats), 6), round(sum(lngs) / len(lngs), 6)
+    except Exception:
+        return None, None
+
+
+def fetch_from_nyc_open_data():
+    """
+    Fetch all NYC Parks public tennis courts from NYC Open Data.
+    Dataset: Athletic Facilities (qnem-b8re) + Parks Properties (enfh-gkve).
+    Returns a list of court dicts grouped by park location.
+    """
+    print("  Fetching NYC Parks tennis courts from NYC Open Data...")
+
+    # Step 1: All athletic facility records where tennis=true
+    fields_url = "https://data.cityofnewyork.us/resource/qnem-b8re.json?" + urllib.parse.urlencode({
+        "$where": "tennis=true",
+        "$limit": "2000",
+        "$select": "gispropnum,borough,surface_type,system,zipcode,multipolygon"
+    })
+    req = urllib.request.Request(fields_url, headers={"User-Agent": "NYCCourtsApp/1.0"})
+    courts_raw = json.loads(urllib.request.urlopen(req, timeout=30).read())
+    print(f"    {len(courts_raw)} raw court records fetched")
+
+    # Step 2: Park names from Parks Properties dataset
+    parks_url = "https://data.cityofnewyork.us/resource/enfh-gkve.json?" + urllib.parse.urlencode({
+        "$limit": "5000",
+        "$select": "gispropnum,signname,address,borough"
+    })
+    req2 = urllib.request.Request(parks_url, headers={"User-Agent": "NYCCourtsApp/1.0"})
+    parks_raw = json.loads(urllib.request.urlopen(req2, timeout=30).read())
+    park_lookup = {p["gispropnum"]: p for p in parks_raw if "gispropnum" in p}
+
+    # Step 3: Group individual courts by park, compute centroid
+    parks = {}
+    for c in courts_raw:
+        pid = c.get("gispropnum")
+        if not pid:
+            continue
+        if pid not in parks:
+            parks[pid] = {
+                "courts": 0, "surfaces": set(),
+                "first_poly": c.get("multipolygon"),
+                "borough_code": c.get("borough", ""),
+                "zipcode": c.get("zipcode", "")
+            }
+        parks[pid]["courts"] += 1
+        surf = c.get("surface_type", "")
+        if surf:
+            parks[pid]["surfaces"].add(surf)
+
+    # Step 4: Build final court list
+    result = []
+    NYC_LAT = (40.477, 40.917)
+    NYC_LNG = (-74.260, -73.700)
+
+    for pid, info in parks.items():
+        park_info = park_lookup.get(pid, {})
+        raw_name = park_info.get("signname", "").strip()
+        name = raw_name or f"NYC Parks ({pid})"
+        address = park_info.get("address", "")
+        borough = NYC_BOROUGH_MAP.get(info["borough_code"],
+                  NYC_BOROUGH_MAP.get(park_info.get("borough", ""), "Unknown"))
+
+        lat, lng = _polygon_centroid(info["first_poly"])
+        if not lat or not lng:
+            continue
+        if not (NYC_LAT[0] <= lat <= NYC_LAT[1] and NYC_LNG[0] <= lng <= NYC_LNG[1]):
+            continue
+
+        surfaces = info["surfaces"] - {""}
+        raw_surf = list(surfaces)[0] if surfaces else ""
+        surface = SURFACE_MAP.get(raw_surf.lower(), "hard")
+
+        zip_code = info["zipcode"]
+        full_address = f"{address}, {borough}, NY {zip_code}".strip(", ") if address else f"{borough}, NY"
+
+        result.append({
+            "name": f"{name} Tennis",
+            "sport": "tennis",
+            "location": "outdoor",
+            "surface": surface,
+            "access": "permit",
+            "address": full_address,
+            "lat": lat,
+            "lng": lng,
+            "borough": borough,
+            "courts": info["courts"],
+            "verified": True,
+            "source": "NYC Open Data"
+        })
+
+    print(f"    {len(result)} unique park locations with tennis courts")
+    return result
 
 
 def fetch_from_geoapify():
@@ -257,27 +365,69 @@ def print_diff_report(new_courts):
         print(f"\n⚠️  Could not generate diff report: {e}")
 
 
+def merge_all_sources(nyc_courts, geo_courts):
+    """
+    Merge NYC Open Data tennis courts with Geoapify padel/private courts.
+    Deduplicates by proximity (0.005 degree ~ 500m).
+    """
+    def near(c1, c2, thresh=0.005):
+        return abs(c1["lat"] - c2["lat"]) < thresh and abs(c1["lng"] - c2["lng"]) < thresh
+
+    merged = list(nyc_courts)
+    # Add Geoapify courts not already covered (mainly padel + private clubs)
+    for gc in geo_courts:
+        if not any(near(gc, mc) for mc in merged):
+            merged.append(gc)
+
+    # Add curated padel courts not covered by either source
+    for curated in FALLBACK_COURTS:
+        if curated["sport"] == "padel" and not any(near(curated, mc) for mc in merged):
+            merged.append({**curated, "source": "curated"})
+
+    for i, c in enumerate(merged, start=1):
+        c["id"] = i
+
+    return merged
+
+
 def main():
     courts = []
     source = "fallback"
 
-    print("Fetching live court data from Geoapify Places API...")
+    print("═" * 50)
+    print("NYC Courts Data Pipeline")
+    print("═" * 50)
+
+    nyc_courts, geo_courts = [], []
+
+    # ── Source 1: NYC Open Data (official Parks Dept) ─────────────────────────
+    print("\n[1/2] NYC Open Data — official Parks tennis courts")
     try:
-        live = fetch_from_geoapify()
-        print(f"  Geoapify returned {len(live)} verified courts")
-
-        if len(live) >= 10:
-            courts = merge_with_curated(live)
-            source = "Geoapify + curated"
-            print(f"  Merged to {len(courts)} total courts (live + curated supplements)")
-        else:
-            raise ValueError(f"Too few results ({len(live)}), using fallback")
-
+        nyc_courts = fetch_from_nyc_open_data()
     except Exception as e:
-        print(f"  Live API unavailable or insufficient: {e}")
-        print("  Using curated fallback dataset...")
+        print(f"  ⚠️  NYC Open Data unavailable: {e}")
+
+    # ── Source 2: Geoapify (padel + private clubs) ────────────────────────────
+    print("\n[2/2] Geoapify — padel courts and private clubs")
+    try:
+        geo_courts = fetch_from_geoapify()
+        print(f"  Geoapify returned {len(geo_courts)} courts")
+    except Exception as e:
+        print(f"  ⚠️  Geoapify unavailable: {e}")
+
+    # ── Merge ─────────────────────────────────────────────────────────────────
+    if len(nyc_courts) >= 10:
+        courts = merge_all_sources(nyc_courts, geo_courts)
+        source = "NYC Open Data + Geoapify + curated padel"
+        print(f"\n  Merged: {len(nyc_courts)} NYC Parks + {len(geo_courts)} Geoapify → {len(courts)} total")
+    elif len(geo_courts) >= 10:
+        courts = merge_with_curated(geo_courts)
+        source = "Geoapify + curated"
+        print(f"\n  Using Geoapify fallback: {len(courts)} courts")
+    else:
         courts = FALLBACK_COURTS[:]
         source = "curated fallback"
+        print("\n  ⚠️  Both APIs unavailable — using curated fallback dataset")
 
     # ── Validate before saving ────────────────────────────────────────────────
     print("\nValidating court data...")
