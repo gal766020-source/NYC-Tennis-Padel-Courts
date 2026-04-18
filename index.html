@@ -211,15 +211,41 @@
     }
     .reset-link:hover { color: #111; }
 
-    .filter-group { margin-bottom: 15px; }
-    .filter-group:last-child { margin-bottom: 0; }
+    .filter-group { border-bottom: 1px solid #f0f0f0; }
+    .filter-group:last-child { border-bottom: none; }
     .filter-group-title {
-      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.8px;
-      color: #bbb;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+      color: #333;
+      cursor: pointer;
+      user-select: none;
+    }
+    .filter-group-title:hover { color: #111; }
+    .filter-group-arrow {
+      font-size: 10px;
+      color: #aaa;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .filter-group.open .filter-group-arrow { transform: rotate(180deg); }
+    .filter-group-body {
+      display: none;
+      padding-bottom: 10px;
+    }
+    .filter-group.open .filter-group-body { display: block; }
+    .filter-badge {
+      font-size: 10px;
+      color: #fff;
+      background: #2563EB;
+      border-radius: 10px;
+      padding: 1px 6px;
+      margin-left: 6px;
+      font-weight: 700;
     }
 
     .checkbox-item {
@@ -402,87 +428,112 @@
         <span class="reset-link" id="resetFilters">Reset all</span>
       </div>
 
-      <div class="filter-group">
-        <div class="filter-group-title">Sport</div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-tennis" checked data-filter="sport" value="tennis">
-          <label for="f-tennis">🎾 Tennis</label>
+      <div class="filter-group open">
+        <div class="filter-group-title">
+          <span>Sport</span>
+          <span class="filter-group-arrow">▼</span>
         </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-padel" checked data-filter="sport" value="padel">
-          <label for="f-padel">🏓 Padel</label>
+        <div class="filter-group-body">
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-tennis" checked data-filter="sport" value="tennis">
+            <label for="f-tennis">🎾 Tennis</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-padel" checked data-filter="sport" value="padel">
+            <label for="f-padel">🏓 Padel</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group open">
+        <div class="filter-group-title">
+          <span>Borough</span>
+          <span class="filter-group-arrow">▼</span>
+        </div>
+        <div class="filter-group-body">
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-manhattan" checked data-filter="borough" value="Manhattan">
+            <label for="f-manhattan">Manhattan</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-brooklyn" checked data-filter="borough" value="Brooklyn">
+            <label for="f-brooklyn">Brooklyn</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-queens" checked data-filter="borough" value="Queens">
+            <label for="f-queens">Queens</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-bronx" checked data-filter="borough" value="Bronx">
+            <label for="f-bronx">Bronx</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-statenisland" checked data-filter="borough" value="Staten Island">
+            <label for="f-statenisland">Staten Island</label>
+          </div>
         </div>
       </div>
 
       <div class="filter-group">
-        <div class="filter-group-title">Borough</div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-manhattan" checked data-filter="borough" value="Manhattan">
-          <label for="f-manhattan">Manhattan</label>
+        <div class="filter-group-title">
+          <span>Location</span>
+          <span class="filter-group-arrow">▼</span>
         </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-brooklyn" checked data-filter="borough" value="Brooklyn">
-          <label for="f-brooklyn">Brooklyn</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-queens" checked data-filter="borough" value="Queens">
-          <label for="f-queens">Queens</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-bronx" checked data-filter="borough" value="Bronx">
-          <label for="f-bronx">Bronx</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-statenisland" checked data-filter="borough" value="Staten Island">
-          <label for="f-statenisland">Staten Island</label>
+        <div class="filter-group-body">
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-outdoor" checked data-filter="location" value="outdoor">
+            <label for="f-outdoor">Outdoor</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-indoor" checked data-filter="location" value="indoor">
+            <label for="f-indoor">Indoor</label>
+          </div>
         </div>
       </div>
 
       <div class="filter-group">
-        <div class="filter-group-title">Location</div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-outdoor" checked data-filter="location" value="outdoor">
-          <label for="f-outdoor">Outdoor</label>
+        <div class="filter-group-title">
+          <span>Surface</span>
+          <span class="filter-group-arrow">▼</span>
         </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-indoor" checked data-filter="location" value="indoor">
-          <label for="f-indoor">Indoor</label>
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <div class="filter-group-title">Surface</div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-hard" checked data-filter="surface" value="hard">
-          <label for="f-hard">Hard</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-clay" checked data-filter="surface" value="clay">
-          <label for="f-clay">Clay</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-grass" checked data-filter="surface" value="grass">
-          <label for="f-grass">Grass</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-unknown" checked data-filter="surface" value="unknown">
-          <label for="f-unknown">Unknown</label>
+        <div class="filter-group-body">
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-hard" checked data-filter="surface" value="hard">
+            <label for="f-hard">Hard</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-clay" checked data-filter="surface" value="clay">
+            <label for="f-clay">Clay</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-grass" checked data-filter="surface" value="grass">
+            <label for="f-grass">Grass</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-unknown" checked data-filter="surface" value="unknown">
+            <label for="f-unknown">Unknown</label>
+          </div>
         </div>
       </div>
 
       <div class="filter-group">
-        <div class="filter-group-title">Access</div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-free" checked data-filter="access" value="free">
-          <label for="f-free">✅ Public / Free</label>
+        <div class="filter-group-title">
+          <span>Access</span>
+          <span class="filter-group-arrow">▼</span>
         </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-permit" checked data-filter="access" value="permit">
-          <label for="f-permit">🏙️ Permit Required</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="f-private" checked data-filter="access" value="private">
-          <label for="f-private">🔒 Private Club</label>
+        <div class="filter-group-body">
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-free" checked data-filter="access" value="free">
+            <label for="f-free">✅ Public / Free</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-permit" checked data-filter="access" value="permit">
+            <label for="f-permit">🏙️ Permit Required</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="f-private" checked data-filter="access" value="private">
+            <label for="f-private">🔒 Private Club</label>
+          </div>
         </div>
       </div>
     </div>
@@ -1191,6 +1242,15 @@ function showDriveStatus(html, type) {
   el.className = 'status-msg' + (type ? ' ' + type : '');
   el.style.display = 'block';
 }
+
+// ════════════════════════════════════════════════════════════
+// ACCORDION FILTER GROUPS
+// ════════════════════════════════════════════════════════════
+document.querySelectorAll('.filter-group-title').forEach(title => {
+  title.addEventListener('click', () => {
+    title.parentElement.classList.toggle('open');
+  });
+});
 
 // ════════════════════════════════════════════════════════════
 // MOBILE SIDEBAR TOGGLE
