@@ -1,12 +1,327 @@
 {
   "meta": {
-    "last_updated": "2026-04-17T22:25:12Z",
-    "source": "curated fallback",
-    "total_courts": 34
+    "last_updated": "2026-04-18T17:42:41Z",
+    "source": "Geoapify + curated",
+    "total_courts": 50
   },
   "courts": [
     {
       "id": 1,
+      "name": "Yorkville Tennis Club",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Yorkville Tennis Club, 1725 York Avenue, New York, NY 10128, United States of America",
+      "lat": 40.778366,
+      "lng": -73.946314,
+      "borough": "Manhattan",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 2,
+      "name": "Washington Market Park Tennis Court",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Washington Market Park Tennis Court, Tribeca Bridge, New York, NY 10282, United States of America",
+      "lat": 40.717173,
+      "lng": -74.012251,
+      "borough": "Manhattan",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 3,
+      "name": "Padel Haus",
+      "sport": "padel",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "private",
+      "address": "Padel Haus, 307 Kent Avenue, New York, NY 11249, United States of America",
+      "lat": 40.714098,
+      "lng": -73.966771,
+      "borough": "Manhattan",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 4,
+      "name": "Riverside Clay Tennis Association",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "clay",
+      "access": "private",
+      "address": "Riverside Clay Tennis Association, Henry Hudson Parkway, New York, NY 10205, United States of America",
+      "lat": 40.796718,
+      "lng": -73.977064,
+      "borough": "Manhattan",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 5,
+      "name": "Court 16",
+      "sport": "tennis",
+      "location": "indoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 16, Queens Plaza South, New York, NY 11101, United States of America",
+      "lat": 40.752288,
+      "lng": -73.94503,
+      "borough": "Manhattan",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 6,
+      "name": "Mink Padel",
+      "sport": "padel",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Mink Padel, 439 West 127th Street, New York, NY 10027, United States of America",
+      "lat": 40.813485,
+      "lng": -73.954779,
+      "borough": "Manhattan",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 7,
+      "name": "Queens College Outdoor Tennis Courts",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Queens College Outdoor Tennis Courts, Reeves Avenue, New York, NY 11367, United States of America",
+      "lat": 40.737541,
+      "lng": -73.821671,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 8,
+      "name": "Court 4",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 4, Meridian Road, New York, NY 11368, United States of America",
+      "lat": 40.748735,
+      "lng": -73.848379,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 9,
+      "name": "Court 5",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 5, Meridian Road, New York, NY 11368, United States of America",
+      "lat": 40.748847,
+      "lng": -73.848044,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 10,
+      "name": "Court 6",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 6, Fountain Plaza, New York, NY 11368, United States of America",
+      "lat": 40.748959,
+      "lng": -73.847709,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 11,
+      "name": "Court 7",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 7, Fountain Plaza, New York, NY 11368, United States of America",
+      "lat": 40.748578,
+      "lng": -73.847227,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 12,
+      "name": "Court 11",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 11, Fountain Plaza, New York, NY 11368, United States of America",
+      "lat": 40.749113,
+      "lng": -73.845638,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 13,
+      "name": "Court 12",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 12, Fountain Plaza, New York, NY 11368, United States of America",
+      "lat": 40.74922,
+      "lng": -73.845314,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 14,
+      "name": "Court 16",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 16, United Nations Avenue North, New York, NY 11368, United States of America",
+      "lat": 40.748765,
+      "lng": -73.844927,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 15,
+      "name": "Court 15",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 15, United Nations Avenue North, New York, NY 11368, United States of America",
+      "lat": 40.748665,
+      "lng": -73.845229,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 16,
+      "name": "Court 14",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 14, United Nations Avenue North, New York, NY 11368, United States of America",
+      "lat": 40.748564,
+      "lng": -73.84553,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 17,
+      "name": "Court 13",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 13, United Nations Avenue North, New York, NY 11368, United States of America",
+      "lat": 40.748462,
+      "lng": -73.845831,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 18,
+      "name": "Court 8",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 8, United Nations Avenue North, New York, NY 11368, United States of America",
+      "lat": 40.748045,
+      "lng": -73.847068,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 19,
+      "name": "Court 9",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 9, United Nations Avenue North, New York, NY 11368, United States of America",
+      "lat": 40.748145,
+      "lng": -73.846768,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 20,
+      "name": "Court 10",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 10, United Nations Avenue North, New York, NY 11368, United States of America",
+      "lat": 40.748245,
+      "lng": -73.846465,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 21,
+      "name": "Park Hill Racquet Club",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Park Hill Racquet Club, Glenbrook Avenue, City of Yonkers, NY 10705, United States of America",
+      "lat": 40.92335,
+      "lng": -73.890649,
+      "borough": "Bronx",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 22,
       "name": "Central Park Tennis Center",
       "sport": "tennis",
       "location": "outdoor",
@@ -17,24 +332,11 @@
       "lng": -73.9591,
       "borough": "Manhattan",
       "courts": 30,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 2,
-      "name": "Riverside Park Tennis Courts",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "permit",
-      "address": "Riverside Park, 97th St, New York, NY 10025",
-      "lat": 40.7933,
-      "lng": -73.9745,
-      "borough": "Manhattan",
-      "courts": 10,
-      "verified": true
-    },
-    {
-      "id": 3,
+      "id": 23,
       "name": "Sutton East Tennis Club",
       "sport": "tennis",
       "location": "indoor",
@@ -45,10 +347,11 @@
       "lng": -73.9556,
       "borough": "Manhattan",
       "courts": 8,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 4,
+      "id": 24,
       "name": "Crosstown Tennis",
       "sport": "tennis",
       "location": "indoor",
@@ -59,10 +362,11 @@
       "lng": -73.9893,
       "borough": "Manhattan",
       "courts": 6,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 5,
+      "id": 25,
       "name": "Hudson River Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -73,10 +377,11 @@
       "lng": -74.0115,
       "borough": "Manhattan",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 6,
+      "id": 26,
       "name": "Manhattan Padel Club",
       "sport": "padel",
       "location": "indoor",
@@ -87,10 +392,11 @@
       "lng": -73.9967,
       "borough": "Manhattan",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 7,
+      "id": 27,
       "name": "Inwood Hill Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -101,38 +407,11 @@
       "lng": -73.9276,
       "borough": "Manhattan",
       "courts": 6,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 8,
-      "name": "Carl Schurz Park Tennis",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "permit",
-      "address": "E 84th St & East End Ave, New York, NY 10028",
-      "lat": 40.7759,
-      "lng": -73.942,
-      "borough": "Manhattan",
-      "courts": 4,
-      "verified": true
-    },
-    {
-      "id": 9,
-      "name": "Morningside Park Tennis",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "free",
-      "address": "Morningside Ave & W 120th St, New York, NY 10027",
-      "lat": 40.8091,
-      "lng": -73.9578,
-      "borough": "Manhattan",
-      "courts": 3,
-      "verified": true
-    },
-    {
-      "id": 10,
+      "id": 28,
       "name": "East River Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -143,10 +422,11 @@
       "lng": -73.9742,
       "borough": "Manhattan",
       "courts": 8,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 11,
+      "id": 29,
       "name": "Prospect Park Tennis Center",
       "sport": "tennis",
       "location": "outdoor",
@@ -157,10 +437,11 @@
       "lng": -73.9707,
       "borough": "Brooklyn",
       "courts": 12,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 12,
+      "id": 30,
       "name": "McCarren Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -171,10 +452,11 @@
       "lng": -73.9536,
       "borough": "Brooklyn",
       "courts": 8,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 13,
+      "id": 31,
       "name": "Marine Park Tennis Courts",
       "sport": "tennis",
       "location": "outdoor",
@@ -185,10 +467,11 @@
       "lng": -73.9219,
       "borough": "Brooklyn",
       "courts": 6,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 14,
+      "id": 32,
       "name": "Owl's Head Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -199,10 +482,11 @@
       "lng": -74.0198,
       "borough": "Brooklyn",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 15,
+      "id": 33,
       "name": "Brooklyn Bridge Park Padel",
       "sport": "padel",
       "location": "outdoor",
@@ -213,10 +497,11 @@
       "lng": -73.998,
       "borough": "Brooklyn",
       "courts": 2,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 16,
+      "id": 34,
       "name": "Canarsie Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -227,10 +512,11 @@
       "lng": -73.9017,
       "borough": "Brooklyn",
       "courts": 5,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 17,
+      "id": 35,
       "name": "Betsy Head Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -241,10 +527,11 @@
       "lng": -73.903,
       "borough": "Brooklyn",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 18,
+      "id": 36,
       "name": "Fort Greene Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -255,24 +542,11 @@
       "lng": -73.9745,
       "borough": "Brooklyn",
       "courts": 2,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 19,
-      "name": "USTA Billie Jean King National Tennis Center",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "permit",
-      "address": "Flushing Meadows\u2013Corona Park, Queens, NY 11368",
-      "lat": 40.7519,
-      "lng": -73.8467,
-      "borough": "Queens",
-      "courts": 22,
-      "verified": true
-    },
-    {
-      "id": 20,
+      "id": 37,
       "name": "Forest Park Tennis Courts",
       "sport": "tennis",
       "location": "outdoor",
@@ -283,24 +557,11 @@
       "lng": -73.8525,
       "borough": "Queens",
       "courts": 8,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 21,
-      "name": "Flushing Meadows Tennis",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "permit",
-      "address": "111th St, Flushing Meadows\u2013Corona Park, Queens, NY 11368",
-      "lat": 40.7445,
-      "lng": -73.843,
-      "borough": "Queens",
-      "courts": 12,
-      "verified": true
-    },
-    {
-      "id": 22,
+      "id": 38,
       "name": "Juniper Valley Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -311,10 +572,11 @@
       "lng": -73.8703,
       "borough": "Queens",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 23,
+      "id": 39,
       "name": "Kissena Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -325,10 +587,11 @@
       "lng": -73.8249,
       "borough": "Queens",
       "courts": 6,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 24,
+      "id": 40,
       "name": "Springfield Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -339,10 +602,11 @@
       "lng": -73.7545,
       "borough": "Queens",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 25,
+      "id": 41,
       "name": "Queens Padel Center",
       "sport": "padel",
       "location": "indoor",
@@ -353,10 +617,11 @@
       "lng": -73.8887,
       "borough": "Queens",
       "courts": 4,
-      "verified": false
+      "verified": false,
+      "source": "curated"
     },
     {
-      "id": 26,
+      "id": 42,
       "name": "Crotona Park Tennis Courts",
       "sport": "tennis",
       "location": "outdoor",
@@ -367,10 +632,11 @@
       "lng": -73.8998,
       "borough": "Bronx",
       "courts": 8,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 27,
+      "id": 43,
       "name": "Van Cortlandt Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -381,10 +647,11 @@
       "lng": -73.8866,
       "borough": "Bronx",
       "courts": 10,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 28,
+      "id": 44,
       "name": "Pelham Bay Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -395,10 +662,11 @@
       "lng": -73.8182,
       "borough": "Bronx",
       "courts": 6,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 29,
+      "id": 45,
       "name": "Mullaly Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -409,10 +677,11 @@
       "lng": -73.927,
       "borough": "Bronx",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 30,
+      "id": 46,
       "name": "Bronx Padel & Racquet Club",
       "sport": "padel",
       "location": "indoor",
@@ -423,10 +692,11 @@
       "lng": -73.8798,
       "borough": "Bronx",
       "courts": 4,
-      "verified": false
+      "verified": false,
+      "source": "curated"
     },
     {
-      "id": 31,
+      "id": 47,
       "name": "Silver Lake Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -437,10 +707,11 @@
       "lng": -74.0975,
       "borough": "Staten Island",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 32,
+      "id": 48,
       "name": "Willowbrook Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -451,10 +722,11 @@
       "lng": -74.1639,
       "borough": "Staten Island",
       "courts": 6,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 33,
+      "id": 49,
       "name": "Walker Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -465,10 +737,11 @@
       "lng": -74.1156,
       "borough": "Staten Island",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     },
     {
-      "id": 34,
+      "id": 50,
       "name": "Clove Lakes Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -479,7 +752,8 @@
       "lng": -74.1142,
       "borough": "Staten Island",
       "courts": 4,
-      "verified": true
+      "verified": true,
+      "source": "curated"
     }
   ]
 }

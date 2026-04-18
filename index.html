@@ -423,11 +423,15 @@
         <div class="filter-group-title">Access</div>
         <div class="checkbox-item">
           <input type="checkbox" id="f-free" checked data-filter="access" value="free">
-          <label for="f-free">Free / First come first serve</label>
+          <label for="f-free">✅ Public / Free</label>
         </div>
         <div class="checkbox-item">
           <input type="checkbox" id="f-permit" checked data-filter="access" value="permit">
-          <label for="f-permit">NYC Parks Permit</label>
+          <label for="f-permit">🏙️ Permit Required</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="f-private" checked data-filter="access" value="private">
+          <label for="f-private">🔒 Private Club</label>
         </div>
       </div>
     </div>
@@ -754,7 +758,7 @@ function initMap() {
   const sportLabel  = c.sport.charAt(0).toUpperCase() + c.sport.slice(1);
   const locLabel    = c.location.charAt(0).toUpperCase() + c.location.slice(1);
   const surfLabel   = c.surface !== 'unknown' ? c.surface.charAt(0).toUpperCase() + c.surface.slice(1) : 'Unknown';
-  const accessLabel = c.access === 'free' ? 'Free / First come first serve' : 'NYC Parks Permit Required';
+  const accessLabel = c.access === 'private' ? '🔒 Private Club' : c.access === 'permit' ? '🏙️ Permit Required' : '✅ Public / Free';
   const sportColor  = c.sport === 'tennis' ? '#2563EB' : '#7C3AED';
   const verifiedBadge = c.verified
     ? `<span style="color:#166534;font-size:11px">✓ Verified</span>`

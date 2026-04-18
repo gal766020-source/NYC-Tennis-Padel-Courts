@@ -1,41 +1,40 @@
 """
 fetch_courts.py
 ---------------
-Fetches NYC tennis & padel court data from OpenStreetMap (Overpass API).
-If the live API is unavailable, falls back to the last saved courts_data.json.
+Fetches NYC tennis & padel court data from Geoapify Places API (backed by OpenStreetMap).
+If the live API is unavailable, falls back to the curated FALLBACK_COURTS dataset.
 Cleans and outputs data to courts_data.json for the web app to consume.
 
-Data source: OpenStreetMap (openstreetmap.org) via Overpass API
+Data source: Geoapify Places API (geoapify.com) — category sport.pitch
 Run manually:  python3 fetch_courts.py
 Run via CI/CD: GitHub Actions (.github/workflows/update_courts.yml)
 """
 
 import json
 import urllib.request
-import urllib.parse
 import os
-import sys
 from datetime import datetime, timezone
 
 OUTPUT_FILE = "courts_data.json"
+GEOAPIFY_API_KEY = "5f7b18b93f6e4d02b0ea3ceabe6db9b4"
 
-# NYC bounding box: (south, west, north, east)
-NYC_BOUNDS = (40.477, -74.260, 40.917, -73.700)
+# Borough search centers: (name, lng, lat, radius_meters)
+BOROUGH_CENTERS = [
+    ("Manhattan",     -73.9857, 40.7580, 8000),
+    ("Brooklyn",      -73.9442, 40.6501, 10000),
+    ("Queens",        -73.8448, 40.7282, 12000),
+    ("Bronx",         -73.8648, 40.8448, 10000),
+    ("Staten Island", -74.1502, 40.5795, 10000),
+]
 
-# Overpass API query — fetches all tennis & padel court ways in NYC with their center coords
-OVERPASS_QUERY = f"""
-[out:json][timeout:60];
-(
-  way["sport"="tennis"]({NYC_BOUNDS[0]},{NYC_BOUNDS[1]},{NYC_BOUNDS[2]},{NYC_BOUNDS[3]});
-  way["sport"="padel"]({NYC_BOUNDS[0]},{NYC_BOUNDS[1]},{NYC_BOUNDS[2]},{NYC_BOUNDS[3]});
-  way["leisure"="pitch"]["sport"="tennis"]({NYC_BOUNDS[0]},{NYC_BOUNDS[1]},{NYC_BOUNDS[2]},{NYC_BOUNDS[3]});
-);
-out center tags;
-"""
+SURFACE_MAP = {
+    "asphalt": "hard", "concrete": "hard", "hard": "hard", "acrylic": "hard",
+    "synthetic": "hard", "artificial_turf": "hard",
+    "clay": "clay", "en tout cas": "clay", "red clay": "clay",
+    "grass": "grass", "artificial_grass": "grass",
+}
 
 # ── Fallback curated data (used when API is unavailable) ─────────────────────
-# Sources: NYC Parks Dept, USTA, verified venue websites
-# Padel courts marked verified=false need re-confirmation
 FALLBACK_COURTS = [
     # MANHATTAN
     {"id":1,"name":"Central Park Tennis Center","sport":"tennis","location":"outdoor","surface":"clay","access":"permit","address":"Central Park, near W 93rd St, New York, NY 10024","lat":40.7859,"lng":-73.9591,"borough":"Manhattan","courts":30,"verified":True},
@@ -79,123 +78,135 @@ FALLBACK_COURTS = [
 ]
 
 
-def get_borough(lat, lng):
-    """Estimate NYC borough from coordinates."""
-    if lat > 40.85 and lng > -73.94:
-        return "Bronx"
-    if lng < -74.05:
-        return "Staten Island"
-    if lat < 40.65 and lng > -73.96:
-        return "Brooklyn"
-    if lng > -73.87:
-        return "Queens"
-    if lat > 40.70 and lng > -74.02 and lng < -73.91:
-        return "Manhattan"
-    if lat < 40.70 and lng > -74.02:
-        return "Brooklyn"
-    return "Unknown"
+def fetch_from_geoapify():
+    """Fetch live tennis & padel court data from Geoapify Places API."""
+    courts = []
+    seen_ids = set()
+
+    for borough, lng, lat, radius in BOROUGH_CENTERS:
+        print(f"  Fetching {borough}...")
+        url = (
+            f"https://api.geoapify.com/v2/places"
+            f"?categories=sport.pitch"
+            f"&conditions=named"
+            f"&filter=circle:{lng},{lat},{radius}"
+            f"&limit=500"
+            f"&apiKey={GEOAPIFY_API_KEY}"
+        )
+        req = urllib.request.Request(url, headers={"User-Agent": "NYCCourtsApp/1.0"})
+        resp = urllib.request.urlopen(req, timeout=30)
+        features = json.loads(resp.read()).get("features", [])
+
+        for f in features:
+            p = f.get("properties", {})
+            raw = p.get("datasource", {}).get("raw", {})
+
+            # Use set-based sport matching to avoid "table_tennis" false positives
+            sport_tag = str(raw.get("sport") or "").lower()
+            sports_set = set(s.strip() for s in sport_tag.split(";")) if sport_tag else set()
+            name = str(p.get("name") or "")
+            name_lower = name.lower()
+
+            is_tennis = "tennis" in sports_set
+            is_padel = "padel" in sports_set
+
+            # Fall back to name-based detection only when no sport tag
+            if not sports_set:
+                is_tennis = "tennis court" in name_lower or name_lower.endswith(" tennis")
+                is_padel = "padel" in name_lower
+
+            if not (is_tennis or is_padel):
+                continue
+
+            # Skip entries with no real name (single chars, pure numbers)
+            if len(name.strip()) < 3 or name.strip().isdigit():
+                continue
+
+            geo = f.get("geometry", {}).get("coordinates", [None, None])
+            court_lng, court_lat = geo[0], geo[1]
+            if not court_lat or not court_lng:
+                continue
+
+            place_id = p.get("place_id") or f"{round(court_lat,4)},{round(court_lng,4)}"
+            if place_id in seen_ids:
+                continue
+            seen_ids.add(place_id)
+
+            sport = "padel" if is_padel else "tennis"
+            raw_surface = str(raw.get("surface") or "").lower()
+            surface = SURFACE_MAP.get(raw_surface, "unknown" if raw_surface else "hard")
+
+            access_raw = str(raw.get("access") or "").lower()
+            if access_raw in ("private", "customers", "no"):
+                access = "private"
+            elif access_raw in ("permit", "permissive"):
+                access = "permit"
+            else:
+                access = "free"
+
+            indoor_tag = str(raw.get("indoor") or raw.get("covered") or "").lower()
+            location = "indoor" if indoor_tag in ("yes", "true") else "outdoor"
+
+            addr = ", ".join(x for x in [p.get("address_line1", ""), p.get("address_line2", "")] if x) or "NYC"
+
+            courts.append({
+                "id": len(courts) + 1000,
+                "name": name or f"{sport.title()} Court",
+                "sport": sport,
+                "location": location,
+                "surface": surface,
+                "access": access,
+                "address": addr,
+                "lat": round(court_lat, 6),
+                "lng": round(court_lng, 6),
+                "borough": borough,
+                "courts": int(raw.get("courts") or raw.get("court") or 1),
+                "verified": True,
+                "source": "Geoapify/OpenStreetMap"
+            })
+
+    return courts
 
 
-def fetch_from_overpass():
-    """Fetch live court data from OpenStreetMap Overpass API."""
-    print("Fetching live data from OpenStreetMap Overpass API...")
-    encoded = urllib.parse.urlencode({"data": OVERPASS_QUERY}).encode()
-    req = urllib.request.Request(
-        "https://overpass-api.de/api/interpreter",
-        data=encoded,
-        headers={"User-Agent": "NYCCourtsApp/1.0 (github.com/gal766020-source/NYC-Tennis-Padel-Courts)"}
-    )
-    resp = urllib.request.urlopen(req, timeout=65)
-    return json.loads(resp.read())
+def merge_with_curated(live_courts):
+    """Add curated courts that aren't already covered by live data (by proximity)."""
+    def near(c1, c2, thresh=0.005):
+        return abs(c1["lat"] - c2["lat"]) < thresh and abs(c1["lng"] - c2["lng"]) < thresh
 
+    merged = list(live_courts)
+    for curated in FALLBACK_COURTS:
+        if not any(near(curated, lc) for lc in live_courts):
+            merged.append({**curated, "source": "curated"})
 
-def clean_osm_element(el, idx):
-    """Convert a raw OpenStreetMap element into our court data format."""
-    tags = el.get("tags", {})
-    center = el.get("center", {})
-    lat = center.get("lat") or el.get("lat")
-    lng = center.get("lon") or el.get("lon")
+    # Re-index IDs cleanly
+    for i, c in enumerate(merged, start=1):
+        c["id"] = i
 
-    if not lat or not lng:
-        return None
-
-    sport = tags.get("sport", "tennis").lower()
-    if sport not in ("tennis", "padel"):
-        sport = "tennis"
-
-    surface_map = {"asphalt": "hard", "concrete": "hard", "hard": "hard",
-                   "clay": "clay", "grass": "grass", "artificial_grass": "grass"}
-    raw_surface = tags.get("surface", "unknown").lower()
-    surface = surface_map.get(raw_surface, "unknown")
-
-    name = tags.get("name") or tags.get("operator") or f"{sport.title()} Courts"
-    access_raw = tags.get("access", "").lower()
-    access = "permit" if access_raw in ("permit", "private", "customers") else "free"
-    location = "indoor" if tags.get("indoor", "no").lower() == "yes" else "outdoor"
-    borough = get_borough(lat, lng)
-
-    return {
-        "id": 1000 + idx,
-        "name": name,
-        "sport": sport,
-        "location": location,
-        "surface": surface,
-        "access": access,
-        "address": tags.get("addr:full", tags.get("addr:street", "NYC")),
-        "lat": round(lat, 6),
-        "lng": round(lng, 6),
-        "borough": borough,
-        "courts": int(tags.get("court", tags.get("courts", 1))),
-        "verified": True,
-        "source": "OpenStreetMap"
-    }
-
-
-def load_existing_data():
-    """Load previously saved courts_data.json if it exists."""
-    if os.path.exists(OUTPUT_FILE):
-        with open(OUTPUT_FILE) as f:
-            return json.load(f)
-    return None
+    return merged
 
 
 def main():
     courts = []
     source = "fallback"
-    osm_count = 0
 
-    # ── Try live API ──────────────────────────────────────────
+    print("Fetching live court data from Geoapify Places API...")
     try:
-        result = fetch_from_overpass()
-        elements = result.get("elements", [])
-        print(f"  API returned {len(elements)} raw elements")
+        live = fetch_from_geoapify()
+        print(f"  Geoapify returned {len(live)} verified courts")
 
-        for idx, el in enumerate(elements):
-            court = clean_osm_element(el, idx)
-            if court and court["borough"] != "Unknown":
-                courts.append(court)
-
-        osm_count = len(courts)
-        print(f"  Cleaned to {osm_count} valid courts from OpenStreetMap")
-        source = "OpenStreetMap"
+        if len(live) >= 10:
+            courts = merge_with_curated(live)
+            source = "Geoapify + curated"
+            print(f"  Merged to {len(courts)} total courts (live + curated supplements)")
+        else:
+            raise ValueError(f"Too few results ({len(live)}), using fallback")
 
     except Exception as e:
-        print(f"  Live API unavailable: {e}")
-        print("  Using fallback curated data...")
-
-    # ── Merge or fallback ─────────────────────────────────────
-    # Always include curated padel courts (not in OSM) and verified NYC Parks courts
-    # If OSM returned courts, use them for tennis; keep curated padel courts
-    if osm_count > 10:
-        padel_courts = [c for c in FALLBACK_COURTS if c["sport"] == "padel"]
-        courts = courts + padel_courts
-        print(f"  Merged {osm_count} OSM tennis + {len(padel_courts)} curated padel courts")
-    else:
-        courts = FALLBACK_COURTS
+        print(f"  Live API unavailable or insufficient: {e}")
+        print("  Using curated fallback dataset...")
+        courts = FALLBACK_COURTS[:]
         source = "curated fallback"
-        print(f"  Using {len(courts)} curated courts")
 
-    # ── Save output ───────────────────────────────────────────
     output = {
         "meta": {
             "last_updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
