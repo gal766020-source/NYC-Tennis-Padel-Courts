@@ -1,8 +1,8 @@
 {
   "meta": {
-    "last_updated": "2026-04-18T17:42:41Z",
+    "last_updated": "2026-04-18T19:16:30Z",
     "source": "Geoapify + curated",
-    "total_courts": 50
+    "total_courts": 49
   },
   "courts": [
     {
@@ -307,21 +307,6 @@
     },
     {
       "id": 21,
-      "name": "Park Hill Racquet Club",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "free",
-      "address": "Park Hill Racquet Club, Glenbrook Avenue, City of Yonkers, NY 10705, United States of America",
-      "lat": 40.92335,
-      "lng": -73.890649,
-      "borough": "Bronx",
-      "courts": 1,
-      "verified": true,
-      "source": "Geoapify/OpenStreetMap"
-    },
-    {
-      "id": 22,
       "name": "Central Park Tennis Center",
       "sport": "tennis",
       "location": "outdoor",
@@ -336,7 +321,7 @@
       "source": "curated"
     },
     {
-      "id": 23,
+      "id": 22,
       "name": "Sutton East Tennis Club",
       "sport": "tennis",
       "location": "indoor",
@@ -351,7 +336,7 @@
       "source": "curated"
     },
     {
-      "id": 24,
+      "id": 23,
       "name": "Crosstown Tennis",
       "sport": "tennis",
       "location": "indoor",
@@ -366,7 +351,7 @@
       "source": "curated"
     },
     {
-      "id": 25,
+      "id": 24,
       "name": "Hudson River Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -381,7 +366,7 @@
       "source": "curated"
     },
     {
-      "id": 26,
+      "id": 25,
       "name": "Manhattan Padel Club",
       "sport": "padel",
       "location": "indoor",
@@ -396,7 +381,7 @@
       "source": "curated"
     },
     {
-      "id": 27,
+      "id": 26,
       "name": "Inwood Hill Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -411,7 +396,7 @@
       "source": "curated"
     },
     {
-      "id": 28,
+      "id": 27,
       "name": "East River Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -426,7 +411,7 @@
       "source": "curated"
     },
     {
-      "id": 29,
+      "id": 28,
       "name": "Prospect Park Tennis Center",
       "sport": "tennis",
       "location": "outdoor",
@@ -441,7 +426,7 @@
       "source": "curated"
     },
     {
-      "id": 30,
+      "id": 29,
       "name": "McCarren Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -456,7 +441,7 @@
       "source": "curated"
     },
     {
-      "id": 31,
+      "id": 30,
       "name": "Marine Park Tennis Courts",
       "sport": "tennis",
       "location": "outdoor",
@@ -471,7 +456,7 @@
       "source": "curated"
     },
     {
-      "id": 32,
+      "id": 31,
       "name": "Owl's Head Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -486,7 +471,7 @@
       "source": "curated"
     },
     {
-      "id": 33,
+      "id": 32,
       "name": "Brooklyn Bridge Park Padel",
       "sport": "padel",
       "location": "outdoor",
@@ -501,7 +486,7 @@
       "source": "curated"
     },
     {
-      "id": 34,
+      "id": 33,
       "name": "Canarsie Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -516,7 +501,7 @@
       "source": "curated"
     },
     {
-      "id": 35,
+      "id": 34,
       "name": "Betsy Head Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -531,7 +516,7 @@
       "source": "curated"
     },
     {
-      "id": 36,
+      "id": 35,
       "name": "Fort Greene Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -546,7 +531,7 @@
       "source": "curated"
     },
     {
-      "id": 37,
+      "id": 36,
       "name": "Forest Park Tennis Courts",
       "sport": "tennis",
       "location": "outdoor",
@@ -561,7 +546,7 @@
       "source": "curated"
     },
     {
-      "id": 38,
+      "id": 37,
       "name": "Juniper Valley Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -576,7 +561,7 @@
       "source": "curated"
     },
     {
-      "id": 39,
+      "id": 38,
       "name": "Kissena Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -591,7 +576,7 @@
       "source": "curated"
     },
     {
-      "id": 40,
+      "id": 39,
       "name": "Springfield Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -606,7 +591,7 @@
       "source": "curated"
     },
     {
-      "id": 41,
+      "id": 40,
       "name": "Queens Padel Center",
       "sport": "padel",
       "location": "indoor",
@@ -621,7 +606,7 @@
       "source": "curated"
     },
     {
-      "id": 42,
+      "id": 41,
       "name": "Crotona Park Tennis Courts",
       "sport": "tennis",
       "location": "outdoor",
@@ -636,7 +621,7 @@
       "source": "curated"
     },
     {
-      "id": 43,
+      "id": 42,
       "name": "Van Cortlandt Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -651,7 +636,7 @@
       "source": "curated"
     },
     {
-      "id": 44,
+      "id": 43,
       "name": "Pelham Bay Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -666,7 +651,7 @@
       "source": "curated"
     },
     {
-      "id": 45,
+      "id": 44,
       "name": "Mullaly Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -681,7 +666,7 @@
       "source": "curated"
     },
     {
-      "id": 46,
+      "id": 45,
       "name": "Bronx Padel & Racquet Club",
       "sport": "padel",
       "location": "indoor",
@@ -696,7 +681,7 @@
       "source": "curated"
     },
     {
-      "id": 47,
+      "id": 46,
       "name": "Silver Lake Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -711,7 +696,7 @@
       "source": "curated"
     },
     {
-      "id": 48,
+      "id": 47,
       "name": "Willowbrook Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -726,7 +711,7 @@
       "source": "curated"
     },
     {
-      "id": 49,
+      "id": 48,
       "name": "Walker Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -741,7 +726,7 @@
       "source": "curated"
     },
     {
-      "id": 50,
+      "id": 49,
       "name": "Clove Lakes Park Tennis",
       "sport": "tennis",
       "location": "outdoor",

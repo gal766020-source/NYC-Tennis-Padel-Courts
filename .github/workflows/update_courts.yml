@@ -1,8 +1,11 @@
 # update_courts.yml
 # ------------------
 # Runs every Monday at 6am UTC.
-# Fetches the latest NYC court data via fetch_courts.py,
-# commits the updated courts_data.json, and deploys to GitHub Pages.
+# Step 1: Runs 15 automated tests — if any fail, the whole job stops.
+# Step 2: Fetches the latest NYC court data via fetch_courts.py,
+#         validates the data, prints a weekly diff report.
+# Step 3: Commits the updated courts_data.json and deploys to GitHub Pages.
+# If anything fails, GitHub automatically emails the repo owner.
 
 name: Refresh Court Data
 
@@ -27,8 +30,25 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Fetch latest court data
-        run: python3 fetch_courts.py
+      - name: Install dependencies
+        run: pip install pytest
+
+      - name: Run automated tests
+        run: |
+          echo "════════════════════════════════════"
+          echo "  Running 15 automated pipeline tests"
+          echo "════════════════════════════════════"
+          pytest tests/ -v
+        # If any test fails, the job stops here — data is NOT updated
+
+      - name: Fetch and validate latest court data
+        run: |
+          echo "════════════════════════════════════"
+          echo "  Fetching + validating court data"
+          echo "════════════════════════════════════"
+          python3 fetch_courts.py
+        # fetch_courts.py exits with code 1 if validation fails,
+        # which stops the job and triggers failure email
 
       - name: Commit updated courts_data.json
         run: |
@@ -37,3 +57,22 @@ jobs:
           git add courts_data.json
           git diff --staged --quiet || git commit -m "Auto-refresh court data [$(date -u '+%Y-%m-%d')]"
           git push
+
+      - name: Send success summary
+        if: success()
+        run: |
+          echo "════════════════════════════════════"
+          echo "  ✅ Pipeline completed successfully"
+          echo "  All tests passed, data validated,"
+          echo "  and courts_data.json updated."
+          echo "════════════════════════════════════"
+
+      - name: Alert on failure
+        if: failure()
+        run: |
+          echo "════════════════════════════════════"
+          echo "  ❌ PIPELINE FAILED"
+          echo "  The court data was NOT updated."
+          echo "  Check the logs above for details."
+          echo "  GitHub has emailed the repo owner."
+          echo "════════════════════════════════════"

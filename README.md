@@ -1,5 +1,7 @@
 # NYC Tennis & Padel Finder
 
+![Pipeline Status](https://github.com/gal766020-source/NYC-Tennis-Padel-Courts/actions/workflows/update_courts.yml/badge.svg)
+
 An interactive web app to find tennis and padel courts across all five NYC boroughs — with filters, drive-time estimates, and Google Maps directions.
 
 **Live site:** https://gal766020-source.github.io/NYC-Tennis-Padel-Courts/

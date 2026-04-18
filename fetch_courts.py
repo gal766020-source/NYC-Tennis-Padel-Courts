@@ -127,6 +127,10 @@ def fetch_from_geoapify():
             if not court_lat or not court_lng:
                 continue
 
+            # Skip courts outside NYC geographic bounds
+            if not (40.477 <= court_lat <= 40.917 and -74.260 <= court_lng <= -73.700):
+                continue
+
             place_id = p.get("place_id") or f"{round(court_lat,4)},{round(court_lng,4)}"
             if place_id in seen_ids:
                 continue
@@ -185,6 +189,74 @@ def merge_with_curated(live_courts):
     return merged
 
 
+def validate_courts(courts):
+    """
+    Validate the final court list before saving.
+    Returns (is_valid, list_of_error_messages).
+    """
+    errors = []
+    required = {"name", "lat", "lng", "borough", "sport", "surface", "access"}
+
+    if len(courts) < 10:
+        errors.append(f"Too few courts: {len(courts)} (minimum 10 required)")
+
+    NYC_LAT = (40.477, 40.917)
+    NYC_LNG = (-74.260, -73.700)
+    seen_ids = set()
+
+    for c in courts:
+        name = c.get("name", f"id={c.get('id')}")
+        missing = required - set(c.keys())
+        if missing:
+            errors.append(f"'{name}' is missing fields: {missing}")
+        if not c.get("lat") or not c.get("lng"):
+            errors.append(f"'{name}' has no coordinates")
+        elif not (NYC_LAT[0] <= c["lat"] <= NYC_LAT[1]):
+            errors.append(f"'{name}' latitude {c['lat']} outside NYC bounds")
+        elif not (NYC_LNG[0] <= c["lng"] <= NYC_LNG[1]):
+            errors.append(f"'{name}' longitude {c['lng']} outside NYC bounds")
+        if c.get("id") in seen_ids:
+            errors.append(f"Duplicate ID {c['id']} for '{name}'")
+        seen_ids.add(c.get("id"))
+
+    return (len(errors) == 0), errors
+
+
+def print_diff_report(new_courts):
+    """Compare new courts with previously saved data and print a weekly diff."""
+    if not os.path.exists(OUTPUT_FILE):
+        print("\n📋 Diff report: No previous data found — first run.")
+        return
+
+    try:
+        with open(OUTPUT_FILE) as f:
+            old_data = json.load(f)
+        old_names = {c["name"] for c in old_data.get("courts", [])}
+        new_names = {c["name"] for c in new_courts}
+
+        added   = new_names - old_names
+        removed = old_names - new_names
+        unchanged = len(old_names & new_names)
+
+        print(f"\n📋 Weekly diff report:")
+        print(f"   Total this week : {len(new_courts)} courts")
+        print(f"   Total last week : {len(old_names)} courts")
+        print(f"   Unchanged       : {unchanged}")
+        if added:
+            print(f"   ✅ Added ({len(added)}):")
+            for name in sorted(added):
+                court = next((c for c in new_courts if c["name"] == name), {})
+                print(f"      + {name} ({court.get('borough', '?')}, {court.get('sport', '?')})")
+        if removed:
+            print(f"   ❌ Removed ({len(removed)}):")
+            for name in sorted(removed):
+                print(f"      - {name}")
+        if not added and not removed:
+            print("   No changes — court data is stable.")
+    except Exception as e:
+        print(f"\n⚠️  Could not generate diff report: {e}")
+
+
 def main():
     courts = []
     source = "fallback"
@@ -207,6 +279,20 @@ def main():
         courts = FALLBACK_COURTS[:]
         source = "curated fallback"
 
+    # ── Validate before saving ────────────────────────────────────────────────
+    print("\nValidating court data...")
+    is_valid, errors = validate_courts(courts)
+    if not is_valid:
+        print("❌ VALIDATION FAILED — keeping existing data to protect the app.")
+        for err in errors:
+            print(f"   • {err}")
+        raise SystemExit(1)
+    print(f"  ✅ Validation passed — {len(courts)} courts, all checks OK")
+
+    # ── Diff report ───────────────────────────────────────────────────────────
+    print_diff_report(courts)
+
+    # ── Save ──────────────────────────────────────────────────────────────────
     output = {
         "meta": {
             "last_updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -219,9 +305,9 @@ def main():
     with open(OUTPUT_FILE, "w") as f:
         json.dump(output, f, indent=2)
 
-    print(f"\nDone. Saved {len(courts)} courts to {OUTPUT_FILE}")
-    print(f"Source: {source}")
-    print(f"Last updated: {output['meta']['last_updated']}")
+    print(f"\n✅ Done. Saved {len(courts)} courts to {OUTPUT_FILE}")
+    print(f"   Source       : {source}")
+    print(f"   Last updated : {output['meta']['last_updated']}")
 
 
 if __name__ == "__main__":
