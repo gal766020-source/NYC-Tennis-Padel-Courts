@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-04-18T19:24:59Z",
+    "last_updated": "2026-04-20T11:07:57Z",
     "source": "NYC Open Data + Geoapify + curated padel",
     "total_courts": 110
   },
@@ -234,7 +234,7 @@
       "name": "Parade Ground Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "305 PARKSIDE AVENUE, Brooklyn, NY 11226",
       "lat": 40.651433,
@@ -264,7 +264,7 @@
       "name": "Central Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "1000 5 AVENUE, Manhattan, NY 10024",
       "lat": 40.789715,
@@ -1419,7 +1419,7 @@
       "name": "Riverside Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "Riverside Dr. to Hudson River, W. 72 St.to St Clair Pl., Manhattan, NY 10024",
       "lat": 40.796477,
