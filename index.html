@@ -9,423 +9,210 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 
-    #app { position: relative; width: 100%; height: 100vh; }
+    /* ── LAYOUT ── */
+    #app { display: flex; height: 100vh; }
 
-    /* ── MAP — always full screen ── */
-    #map { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+    /* ── MAP ── */
+    #map { flex: 1; }
 
-    /* ── SIDEBAR — bottom sheet ── */
+    /* ── SIDEBAR ── */
     #sidebar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      max-height: 72vh;
-      background: #fff;
-      box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
-      z-index: 1000;
+      width: 300px;
+      flex-shrink: 0;
+      background: #1a1b2e;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      border-radius: 20px 20px 0 0;
-      transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      box-shadow: 2px 0 16px rgba(0,0,0,0.4);
     }
-    #sidebar.open { transform: translateY(0); }
-
     #sidebar::-webkit-scrollbar { width: 4px; }
     #sidebar::-webkit-scrollbar-track { background: transparent; }
-    #sidebar::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 2px; }
+    #sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
 
     /* ── HEADER ── */
     .sidebar-header {
-      padding: 22px 20px 18px;
-      border-bottom: 1px solid #f0f0f0;
+      background: #111222;
+      padding: 20px 18px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      flex-shrink: 0;
     }
-    .sidebar-header h1 {
-      font-size: 20px;
-      font-weight: 800;
-      color: #111;
-      letter-spacing: -0.5px;
+    .sidebar-header h1 { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+    .sidebar-header p  { font-size: 11px; color: rgba(255,255,255,0.38); margin-top: 3px; }
+
+    /* ── SECTION LABELS ── */
+    .s-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      color: rgba(255,255,255,0.32); text-transform: uppercase;
+      padding: 14px 18px 6px;
     }
-    .sidebar-header p {
-      font-size: 11.5px;
-      color: #999;
-      margin-top: 4px;
-      letter-spacing: 0.2px;
+    .s-divider { height: 1px; background: rgba(255,255,255,0.07); }
+
+    /* ── WEATHER ── */
+    #weatherWidget {
+      display: none;
+      padding: 11px 18px 12px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .weather-label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,0.3); text-transform: uppercase; margin-bottom: 6px; }
+    .weather-main  { display: flex; align-items: center; gap: 10px; }
+    .weather-icon  { width: 36px; height: 36px; flex-shrink: 0; }
+    .weather-temp  { font-size: 18px; font-weight: 800; color: #fff; line-height: 1; }
+    .weather-desc  { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+    .weather-wind  { font-size: 10.5px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+    #weatherWarning {
+      display: none; margin-top: 8px; padding: 6px 9px;
+      background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.28);
+      border-radius: 6px; font-size: 11.5px; color: #fbbf24; font-weight: 600;
     }
 
     /* ── SEARCH ── */
-    .search-wrap {
-      padding: 14px 20px;
-      border-bottom: 1px solid #f0f0f0;
-    }
+    .search-wrap { padding: 6px 18px 12px; }
     .search-wrap input {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1.5px solid #e2e2e2;
-      border-radius: 8px;
-      font-size: 13.5px;
-      outline: none;
-      color: #222;
+      width: 100%; padding: 9px 13px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; font-size: 13px; color: #fff; outline: none;
       transition: border-color 0.2s;
     }
-    .search-wrap input:focus { border-color: #222; }
+    .search-wrap input::placeholder { color: rgba(255,255,255,0.28); }
+    .search-wrap input:focus { border-color: rgba(255,255,255,0.35); }
 
     /* ── RESULT COUNT ── */
-    .result-count {
-      padding: 9px 20px;
-      font-size: 12px;
-      color: #999;
-      background: #fafafa;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .result-count span { font-weight: 700; color: #333; }
+    .result-count { padding: 0 18px 12px; font-size: 11.5px; color: rgba(255,255,255,0.35); }
+    .result-count span { font-weight: 700; color: rgba(255,255,255,0.7); }
 
-    /* ── SECTIONS ── */
-    .section {
-      padding: 16px 20px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .section-title {
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: #aaa;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    .section-desc {
-      font-size: 12px;
-      color: #888;
-      margin-bottom: 12px;
-      line-height: 1.55;
-    }
+    /* ── DRIVE TIME ── */
+    .drive-section { padding: 6px 18px 14px; }
+    .drive-desc { font-size: 12px; color: rgba(255,255,255,0.42); margin-bottom: 10px; line-height: 1.5; }
 
-    /* ── LOCATION BUTTON ── */
     .btn-location {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      width: 100%;
-      padding: 9px 14px;
-      border: 1.5px solid #333;
-      border-radius: 8px;
-      background: transparent;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      color: #333;
-      margin-bottom: 10px;
-      transition: background 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      width: 100%; padding: 9px 14px;
+      background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.45);
+      border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+      color: #a5b4fc; margin-bottom: 8px; transition: background 0.15s;
     }
-    .btn-location:hover { background: #f5f5f5; }
+    .btn-location:hover { background: rgba(99,102,241,0.32); }
 
-    /* ── ADDRESS INPUT ── */
     .address-input {
-      width: 100%;
-      padding: 9px 14px;
-      border: 1.5px solid #e2e2e2;
-      border-radius: 8px;
-      font-size: 13px;
-      outline: none;
-      margin-bottom: 10px;
-      color: #222;
-      transition: border-color 0.2s;
+      width: 100%; padding: 9px 13px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; font-size: 13px; color: #fff; outline: none;
+      margin-bottom: 8px; transition: border-color 0.2s;
     }
-    .address-input:focus { border-color: #222; }
+    .address-input::placeholder { color: rgba(255,255,255,0.28); }
+    .address-input:focus { border-color: rgba(255,255,255,0.35); }
 
-    /* ── DRIVE TIME TOGGLES ── */
-    .drive-time-toggles {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
+    .drive-time-toggles { display: flex; gap: 5px; margin-bottom: 8px; }
     .drive-time-btn {
-      flex: 1;
-      padding: 8px 4px;
-      border: 1.5px solid #ddd;
-      border-radius: 7px;
-      background: #fff;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-      color: #666;
+      flex: 1; padding: 7px 4px;
+      border: 1px solid rgba(255,255,255,0.14); border-radius: 7px;
+      background: transparent; font-size: 12px; font-weight: 600;
+      cursor: pointer; text-align: center; color: rgba(255,255,255,0.45);
       transition: all 0.15s;
     }
-    .drive-time-btn:hover { border-color: #999; color: #333; }
-    .drive-time-btn.active { background: #111; border-color: #111; color: #fff; }
+    .drive-time-btn:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
+    .drive-time-btn.active { background: #fff; border-color: #fff; color: #111; }
 
-    .drive-time-note {
-      font-size: 11px;
-      color: #bbb;
-      margin-bottom: 10px;
-      font-style: italic;
-    }
+    .drive-time-note { font-size: 11px; color: rgba(255,255,255,0.28); margin-bottom: 9px; font-style: italic; }
 
-    /* ── FILTER BUTTON ── */
     .btn-filter {
-      width: 100%;
-      padding: 11px;
-      background: #111;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
+      width: 100%; padding: 10px; background: #fff; color: #111;
+      border: none; border-radius: 8px; font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: background 0.15s;
     }
-    .btn-filter:hover { background: #333; }
+    .btn-filter:hover { background: #e8e8e8; }
 
-    /* ── STATUS MESSAGE ── */
     .status-msg {
-      font-size: 12px;
-      color: #666;
-      margin-top: 9px;
-      padding: 8px 10px;
-      background: #f8f8f8;
-      border-radius: 6px;
-      line-height: 1.4;
+      font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 8px;
+      padding: 8px 10px; background: rgba(255,255,255,0.07);
+      border-radius: 6px; line-height: 1.4;
     }
-    .status-msg.error   { color: #b91c1c; background: #fef2f2; }
-    .status-msg.success { color: #166534; background: #f0fdf4; }
+    .status-msg.error   { color: #fca5a5; background: rgba(239,68,68,0.1); }
+    .status-msg.success { color: #86efac; background: rgba(34,197,94,0.08); }
     .clear-drive {
-      display: inline-block;
-      margin-left: 6px;
-      font-size: 11px;
-      color: #555;
-      text-decoration: underline;
-      cursor: pointer;
+      display: inline-block; margin-left: 6px; font-size: 11px;
+      color: rgba(255,255,255,0.45); text-decoration: underline; cursor: pointer;
     }
-    .clear-drive:hover { color: #111; }
+    .clear-drive:hover { color: #fff; }
 
-    /* ── FILTERS SECTION ── */
+    /* ── FILTERS ── */
+    .filters-section { padding: 4px 18px 14px; }
     .filters-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
+      display: flex; align-items: center; justify-content: flex-end;
+      margin-bottom: 12px;
     }
-    .reset-link {
-      font-size: 12px;
-      color: #777;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    .reset-link:hover { color: #111; }
+    .reset-link { font-size: 12px; color: rgba(255,255,255,0.38); text-decoration: underline; cursor: pointer; }
+    .reset-link:hover { color: #fff; }
 
-    /* ── SIDE-BY-SIDE FILTER ROW (Sport + Location) ── */
-    .filter-row {
-      display: flex;
-      gap: 0;
-      padding: 12px 0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .filter-col { flex: 1; padding: 0 4px; }
-    .filter-col-divider {
-      width: 1px;
-      background: #f0f0f0;
-      margin: 0 8px;
-      flex-shrink: 0;
-    }
     .filter-col-title {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      color: #bbb;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.28); text-transform: uppercase;
+      margin-bottom: 9px;
     }
 
-    /* ── CHIP-STYLE CHECKBOXES (Surface + Borough) ── */
-    .filter-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      padding-bottom: 4px;
+    /* 2-col grid for Sport/Location and Surface */
+    .filter-2col { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 14px; }
+
+    /* Checkbox rows with icons */
+    .cb-row {
+      display: flex; align-items: center; gap: 7px;
+      margin-bottom: 9px; cursor: pointer;
     }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 11px;
-      border: 1.5px solid #e2e2e2;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #555;
-      cursor: pointer;
-      transition: all 0.15s;
-      user-select: none;
+    .cb-row:last-child { margin-bottom: 0; }
+    .cb-row input[type="checkbox"] {
+      width: 15px; height: 15px; cursor: pointer;
+      accent-color: #6366f1; flex-shrink: 0;
     }
-    .chip:hover { border-color: #999; color: #222; }
-    .chip input[type="checkbox"] { display: none; }
-    .chip:has(input:checked) {
-      background: #111;
-      border-color: #111;
-      color: #fff;
+    .cb-row label { font-size: 13px; color: rgba(255,255,255,0.78); cursor: pointer; }
+
+    /* Borough chips */
+    .borough-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
+    .boro-chip {
+      display: inline-flex; align-items: center;
+      padding: 4px 10px;
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 20px;
+      font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,0.5);
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .boro-chip:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    .boro-chip input[type="checkbox"] { display: none; }
+    .boro-chip:has(input:checked) {
+      background: rgba(99,102,241,0.28); border-color: #6366f1; color: #a5b4fc;
     }
 
-    .filter-group { border-bottom: 1px solid #f0f0f0; }
-    .filter-group:last-child { border-bottom: none; }
-    .filter-group-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 0;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      color: #333;
-      cursor: pointer;
-      user-select: none;
+    /* Access checkboxes */
+    .access-list { display: flex; flex-direction: column; gap: 7px; }
+    .access-row { display: flex; align-items: center; gap: 9px; cursor: pointer; }
+    .access-row input[type="checkbox"] {
+      width: 15px; height: 15px; cursor: pointer;
+      accent-color: #6366f1; flex-shrink: 0;
     }
-    .filter-group-title:hover { color: #111; }
-    .filter-group-arrow {
-      font-size: 10px;
-      color: #aaa;
-      transition: transform 0.2s;
-      flex-shrink: 0;
-    }
-    .filter-group.open .filter-group-arrow { transform: rotate(180deg); }
-    .filter-group-body {
-      display: none;
-      padding-bottom: 10px;
-    }
-    .filter-group.open .filter-group-body { display: block; }
-    .filter-badge {
-      font-size: 10px;
-      color: #fff;
-      background: #2563EB;
-      border-radius: 10px;
-      padding: 1px 6px;
-      margin-left: 6px;
-      font-weight: 700;
-    }
+    .access-row label { font-size: 12.5px; color: rgba(255,255,255,0.72); cursor: pointer; line-height: 1.3; }
 
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      margin-bottom: 7px;
-      cursor: pointer;
+    /* ── STATS ── */
+    .stats-box { padding: 14px 18px 4px; }
+    .stats-total {
+      background: rgba(255,255,255,0.07); border-radius: 10px;
+      padding: 12px 14px; margin-bottom: 6px;
     }
-    .checkbox-item:last-child { margin-bottom: 0; }
-    .checkbox-item input[type="checkbox"] {
-      width: 15px;
-      height: 15px;
-      cursor: pointer;
-      accent-color: #111;
-      flex-shrink: 0;
-    }
-    .checkbox-item label {
-      font-size: 13px;
-      color: #333;
-      cursor: pointer;
-      line-height: 1.3;
-    }
+    .stats-total-num   { font-size: 28px; font-weight: 800; color: #fff; line-height: 1; }
+    .stats-total-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,0.32); text-transform: uppercase; margin-top: 2px; }
+    .stats-split { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .stats-card { background: rgba(255,255,255,0.07); border-radius: 10px; padding: 10px 14px; }
+    .stats-card-num   { font-size: 22px; font-weight: 800; }
+    .stats-card-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,0.32); text-transform: uppercase; margin-top: 1px; }
+    .stats-card.tennis .stats-card-num { color: #60a5fa; }
+    .stats-card.padel  .stats-card-num { color: #a78bfa; }
 
-    /* ── LEGEND ── */
-    .legend {
-      padding: 14px 20px;
-      display: flex;
-      gap: 18px;
-      border-top: 1px solid #f0f0f0;
-      background: #fafafa;
-      margin-top: auto;
-    }
-    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #666; }
-    .legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
-    .legend-dot.tennis { background: #2563EB; }
-    .legend-dot.padel  { background: #7C3AED; }
-
-    /* ── BOTTOM TOGGLE BUTTON ── */
-    #sidebarToggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2000;
-      background: #111;
-      color: #fff;
-      border: none;
-      border-radius: 28px;
-      padding: 13px 24px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
-      transition: background 0.15s, bottom 0.35s cubic-bezier(0.4,0,0.2,1);
-      white-space: nowrap;
-    }
-    #sidebarToggle:hover { background: #333; }
-    #toggleArrow {
-      font-size: 13px;
-      transition: transform 0.3s ease;
-      display: inline-block;
-    }
-    #sidebarToggle.panel-open #toggleArrow { transform: rotate(180deg); }
-    #sidebarToggle.panel-open { bottom: calc(72vh + 16px); }
-
-    /* ── WEATHER WIDGET ── */
-    #weatherWidget {
-      display: none;
-      padding: 11px 20px;
-      background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
-      border-bottom: 1px solid #bae6fd;
-    }
-    .weather-main {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .weather-icon { width: 36px; height: 36px; flex-shrink: 0; }
-    .weather-info { flex: 1; }
-    .weather-temp { font-size: 18px; font-weight: 800; color: #0c4a6e; line-height: 1; }
-    .weather-desc { font-size: 11px; color: #0369a1; margin-top: 2px; }
-    .weather-wind { font-size: 10.5px; color: #7dd3fc; margin-top: 1px; }
-    .weather-label {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: #7dd3fc;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-    }
-    #weatherWarning {
-      display: none;
-      margin-top: 7px;
-      padding: 6px 9px;
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      border-radius: 6px;
-      font-size: 11.5px;
-      color: #c2410c;
-      font-weight: 600;
-    }
+    /* ── TIP ── */
+    .tip { padding: 12px 18px 18px; font-size: 11px; color: rgba(255,255,255,0.28); line-height: 1.5; }
 
     /* ── LEAFLET POPUP ── */
-    .leaflet-popup-content-wrapper {
-      border-radius: 10px !important;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
-    }
+    .leaflet-popup-content-wrapper { border-radius: 10px !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; }
     .leaflet-popup-content { margin: 14px 16px !important; }
-
-    /* ── DRAG HANDLE ── */
-    .drag-handle {
-      width: 40px;
-      height: 4px;
-      background: #ddd;
-      border-radius: 2px;
-      margin: 10px auto 0;
-      flex-shrink: 0;
-    }
   </style>
 </head>
 <body>
@@ -433,11 +220,10 @@
 
   <!-- ══════════════ SIDEBAR ══════════════ -->
   <div id="sidebar">
-    <div class="drag-handle"></div>
 
     <div class="sidebar-header">
-      <h1>NYC Tennis & Padel Finder</h1>
-      <p>Manhattan · Brooklyn · Queens · Bronx · Staten Island</p>
+      <h1>NYC Tennis & Padel</h1>
+      <p id="headerSub">Manhattan · Brooklyn · Queens · Bronx · Staten Island</p>
     </div>
 
     <!-- Weather Widget -->
@@ -445,7 +231,7 @@
       <div class="weather-label">Today's NYC Weather</div>
       <div class="weather-main">
         <img id="weatherIcon" class="weather-icon" src="" alt="">
-        <div class="weather-info">
+        <div>
           <div class="weather-temp"><span id="weatherTemp">--</span></div>
           <div class="weather-desc" id="weatherDesc"></div>
           <div class="weather-wind" id="weatherWind"></div>
@@ -454,20 +240,21 @@
       <div id="weatherWarning"></div>
     </div>
 
+    <!-- Search -->
+    <div class="s-label">Search</div>
     <div class="search-wrap">
       <input type="text" id="searchInput" placeholder="Search courts by name…" autocomplete="off">
     </div>
-
     <div class="result-count"><span id="courtCount">0</span> courts shown</div>
 
-    <!-- Drive Time -->
-    <div class="section">
-      <div class="section-title">Drive Time Filter</div>
-      <p class="section-desc">See which courts are within driving distance of your home or office</p>
+    <div class="s-divider"></div>
 
+    <!-- Drive Time -->
+    <div class="s-label">Drive Time Filter</div>
+    <div class="drive-section">
+      <p class="drive-desc">See which courts are within driving distance of your home or office</p>
       <button class="btn-location" id="useLocationBtn">📍 Use my location</button>
       <input type="text" class="address-input" id="addressInput" placeholder="e.g. 350 W 42nd St, NY">
-
       <div class="drive-time-toggles">
         <button class="drive-time-btn" data-minutes="10">10 min</button>
         <button class="drive-time-btn active" data-minutes="15">15 min</button>
@@ -475,238 +262,293 @@
         <button class="drive-time-btn" data-minutes="30">30 min</button>
       </div>
       <p class="drive-time-note">⚠️ Estimates only — based on straight-line distance, not live traffic</p>
-
       <button class="btn-filter" id="filterDriveBtn">Filter by drive time</button>
       <div id="driveStatus" style="display:none"></div>
     </div>
 
+    <div class="s-divider"></div>
+
     <!-- Filters -->
-    <div class="section">
+    <div class="s-label">Filters</div>
+    <div class="filters-section">
       <div class="filters-header">
-        <div class="section-title" style="margin-bottom:0">Filters</div>
         <span class="reset-link" id="resetFilters">Reset all</span>
       </div>
 
-      <!-- Row 1: Sport + Location side by side -->
-      <div class="filter-row">
-        <div class="filter-col">
+      <!-- Sport + Location side by side -->
+      <div class="filter-2col">
+        <div>
           <div class="filter-col-title">Sport</div>
-          <div class="checkbox-item">
+          <div class="cb-row">
             <input type="checkbox" id="f-tennis" checked data-filter="sport" value="tennis">
-            <label for="f-tennis">🎾 Tennis</label>
+            <!-- tennis racket icon blue -->
+            <svg width="22" height="27" viewBox="0 0 22 27" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+              <path fill="#3b82f6" d="M11 1C5.48 1 1 5.48 1 11c0 8.3 10 15 10 15s10-6.7 10-15C21 5.48 16.52 1 11 1z"/>
+              <ellipse cx="11" cy="10" rx="5" ry="5.5" fill="none" stroke="white" stroke-width="1.2"/>
+              <line x1="11" y1="4.5" x2="11" y2="15.5" stroke="white" stroke-width="0.8"/>
+              <line x1="6" y1="10" x2="16" y2="10" stroke="white" stroke-width="0.8"/>
+              <line x1="7.5" y1="6.5" x2="14.5" y2="13.5" stroke="white" stroke-width="0.6"/>
+              <line x1="7.5" y1="13.5" x2="14.5" y2="6.5" stroke="white" stroke-width="0.6"/>
+              <line x1="11" y1="15.5" x2="11" y2="20" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <label for="f-tennis">Tennis</label>
           </div>
-          <div class="checkbox-item">
+          <div class="cb-row">
             <input type="checkbox" id="f-padel" checked data-filter="sport" value="padel">
-            <label for="f-padel">🏓 Padel</label>
+            <!-- padel paddle icon purple -->
+            <svg width="22" height="27" viewBox="0 0 22 27" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+              <path fill="#7c3aed" d="M11 1C5.48 1 1 5.48 1 11c0 8.3 10 15 10 15s10-6.7 10-15C21 5.48 16.52 1 11 1z"/>
+              <rect x="7" y="5" width="8" height="8.5" rx="1.5" fill="none" stroke="white" stroke-width="1.1"/>
+              <line x1="9.5" y1="5" x2="9.5" y2="13.5" stroke="white" stroke-width="0.7"/>
+              <line x1="12.5" y1="5" x2="12.5" y2="13.5" stroke="white" stroke-width="0.7"/>
+              <line x1="7" y1="7.8" x2="15" y2="7.8" stroke="white" stroke-width="0.7"/>
+              <line x1="7" y1="10.7" x2="15" y2="10.7" stroke="white" stroke-width="0.7"/>
+              <line x1="11" y1="13.5" x2="11" y2="20" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <label for="f-padel">Padel</label>
           </div>
         </div>
-        <div class="filter-col-divider"></div>
-        <div class="filter-col">
+        <div>
           <div class="filter-col-title">Location</div>
-          <div class="checkbox-item">
+          <div class="cb-row">
             <input type="checkbox" id="f-outdoor" checked data-filter="location" value="outdoor">
-            <label for="f-outdoor">🌤️ Outdoor</label>
+            <!-- outdoor — blue racket -->
+            <svg width="22" height="27" viewBox="0 0 22 27" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+              <path fill="#3b82f6" d="M11 1C5.48 1 1 5.48 1 11c0 8.3 10 15 10 15s10-6.7 10-15C21 5.48 16.52 1 11 1z"/>
+              <ellipse cx="11" cy="10" rx="5" ry="5.5" fill="none" stroke="white" stroke-width="1.2"/>
+              <line x1="11" y1="4.5" x2="11" y2="15.5" stroke="white" stroke-width="0.8"/>
+              <line x1="6" y1="10" x2="16" y2="10" stroke="white" stroke-width="0.8"/>
+              <line x1="11" y1="15.5" x2="11" y2="20" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <label for="f-outdoor">Outdoor</label>
           </div>
-          <div class="checkbox-item">
+          <div class="cb-row">
             <input type="checkbox" id="f-indoor" checked data-filter="location" value="indoor">
-            <label for="f-indoor">🏠 Indoor</label>
+            <!-- indoor — purple paddle -->
+            <svg width="22" height="27" viewBox="0 0 22 27" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+              <path fill="#7c3aed" d="M11 1C5.48 1 1 5.48 1 11c0 8.3 10 15 10 15s10-6.7 10-15C21 5.48 16.52 1 11 1z"/>
+              <line x1="8" y1="4.5" x2="14" y2="4.5" stroke="white" stroke-width="1.3"/>
+              <rect x="7" y="5.8" width="8" height="8.5" rx="1.5" fill="none" stroke="white" stroke-width="1.1"/>
+              <line x1="9.5" y1="5.8" x2="9.5" y2="14.3" stroke="white" stroke-width="0.7"/>
+              <line x1="12.5" y1="5.8" x2="12.5" y2="14.3" stroke="white" stroke-width="0.7"/>
+              <line x1="7" y1="8.5" x2="15" y2="8.5" stroke="white" stroke-width="0.7"/>
+              <line x1="7" y1="11.5" x2="15" y2="11.5" stroke="white" stroke-width="0.7"/>
+              <line x1="11" y1="14.3" x2="11" y2="20" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <label for="f-indoor">Indoor</label>
           </div>
         </div>
       </div>
 
-      <!-- Row 2: Surface -->
-      <div class="filter-group">
-        <div class="filter-group-title">
-          <span>Surface</span>
-          <span class="filter-group-arrow">▼</span>
-        </div>
-        <div class="filter-group-body filter-chips">
-          <label class="chip">
+      <!-- Surface 2-col -->
+      <div class="filter-col-title">Surface</div>
+      <div class="filter-2col" style="margin-bottom:14px">
+        <div>
+          <div class="cb-row">
             <input type="checkbox" id="f-hard" checked data-filter="surface" value="hard">
-            <span>Hard</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" id="f-clay" checked data-filter="surface" value="clay">
-            <span>Clay</span>
-          </label>
-          <label class="chip">
+            <!-- hard — blue -->
+            <svg width="22" height="27" viewBox="0 0 22 27" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+              <path fill="#3b82f6" d="M11 1C5.48 1 1 5.48 1 11c0 8.3 10 15 10 15s10-6.7 10-15C21 5.48 16.52 1 11 1z"/>
+              <ellipse cx="11" cy="10" rx="5" ry="5.5" fill="none" stroke="white" stroke-width="1.2"/>
+              <line x1="11" y1="4.5" x2="11" y2="15.5" stroke="white" stroke-width="0.8"/>
+              <line x1="6" y1="10" x2="16" y2="10" stroke="white" stroke-width="0.8"/>
+              <line x1="11" y1="15.5" x2="11" y2="20" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <label for="f-hard">Hard</label>
+          </div>
+          <div class="cb-row">
             <input type="checkbox" id="f-grass" checked data-filter="surface" value="grass">
-            <span>Grass</span>
-          </label>
-          <label class="chip">
+            <!-- grass — green -->
+            <svg width="22" height="27" viewBox="0 0 22 27" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+              <path fill="#22c55e" d="M11 1C5.48 1 1 5.48 1 11c0 8.3 10 15 10 15s10-6.7 10-15C21 5.48 16.52 1 11 1z"/>
+              <ellipse cx="11" cy="10" rx="5" ry="5.5" fill="none" stroke="white" stroke-width="1.2"/>
+              <line x1="11" y1="4.5" x2="11" y2="15.5" stroke="white" stroke-width="0.8"/>
+              <line x1="6" y1="10" x2="16" y2="10" stroke="white" stroke-width="0.8"/>
+              <line x1="11" y1="15.5" x2="11" y2="20" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <label for="f-grass">Grass</label>
+          </div>
+        </div>
+        <div>
+          <div class="cb-row">
+            <input type="checkbox" id="f-clay" checked data-filter="surface" value="clay">
+            <!-- clay — orange -->
+            <svg width="22" height="27" viewBox="0 0 22 27" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+              <path fill="#f97316" d="M11 1C5.48 1 1 5.48 1 11c0 8.3 10 15 10 15s10-6.7 10-15C21 5.48 16.52 1 11 1z"/>
+              <ellipse cx="11" cy="10" rx="5" ry="5.5" fill="none" stroke="white" stroke-width="1.2"/>
+              <line x1="11" y1="4.5" x2="11" y2="15.5" stroke="white" stroke-width="0.8"/>
+              <line x1="6" y1="10" x2="16" y2="10" stroke="white" stroke-width="0.8"/>
+              <line x1="11" y1="15.5" x2="11" y2="20" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <label for="f-clay">Clay</label>
+          </div>
+          <div class="cb-row">
             <input type="checkbox" id="f-unknown" checked data-filter="surface" value="unknown">
-            <span>Unknown</span>
-          </label>
+            <!-- unknown — lavender -->
+            <svg width="22" height="27" viewBox="0 0 22 27" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+              <path fill="#8b5cf6" d="M11 1C5.48 1 1 5.48 1 11c0 8.3 10 15 10 15s10-6.7 10-15C21 5.48 16.52 1 11 1z"/>
+              <ellipse cx="11" cy="10" rx="5" ry="5.5" fill="none" stroke="white" stroke-width="1.2"/>
+              <line x1="11" y1="4.5" x2="11" y2="15.5" stroke="white" stroke-width="0.8"/>
+              <line x1="6" y1="10" x2="16" y2="10" stroke="white" stroke-width="0.8"/>
+              <line x1="11" y1="15.5" x2="11" y2="20" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <label for="f-unknown">Unknown</label>
+          </div>
         </div>
       </div>
 
-      <!-- Row 3: Borough collapsible -->
-      <div class="filter-group">
-        <div class="filter-group-title">
-          <span>Borough</span>
-          <span class="filter-group-arrow">▼</span>
-        </div>
-        <div class="filter-group-body filter-chips">
-          <label class="chip">
-            <input type="checkbox" id="f-manhattan" checked data-filter="borough" value="Manhattan">
-            <span>Manhattan</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" id="f-brooklyn" checked data-filter="borough" value="Brooklyn">
-            <span>Brooklyn</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" id="f-queens" checked data-filter="borough" value="Queens">
-            <span>Queens</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" id="f-bronx" checked data-filter="borough" value="Bronx">
-            <span>Bronx</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" id="f-statenisland" checked data-filter="borough" value="Staten Island">
-            <span>Staten Island</span>
-          </label>
-        </div>
+      <!-- Borough chips -->
+      <div class="filter-col-title" style="margin-bottom:7px">Borough</div>
+      <div class="borough-chips">
+        <label class="boro-chip"><input type="checkbox" id="f-manhattan" checked data-filter="borough" value="Manhattan"><span>Manhattan</span></label>
+        <label class="boro-chip"><input type="checkbox" id="f-brooklyn" checked data-filter="borough" value="Brooklyn"><span>Brooklyn</span></label>
+        <label class="boro-chip"><input type="checkbox" id="f-queens" checked data-filter="borough" value="Queens"><span>Queens</span></label>
+        <label class="boro-chip"><input type="checkbox" id="f-bronx" checked data-filter="borough" value="Bronx"><span>Bronx</span></label>
+        <label class="boro-chip"><input type="checkbox" id="f-statenisland" checked data-filter="borough" value="Staten Island"><span>Staten Island</span></label>
       </div>
 
-      <div class="filter-group">
-        <div class="filter-group-title">
-          <span>Access</span>
-          <span class="filter-group-arrow">▼</span>
+      <!-- Access -->
+      <div class="filter-col-title" style="margin-top:14px;margin-bottom:7px">Access</div>
+      <div class="access-list">
+        <div class="access-row"><input type="checkbox" id="f-free" checked data-filter="access" value="free"><label for="f-free">Free / First come first serve</label></div>
+        <div class="access-row"><input type="checkbox" id="f-permit" checked data-filter="access" value="permit"><label for="f-permit">NYC Parks Permit</label></div>
+        <div class="access-row"><input type="checkbox" id="f-reservable" checked data-filter="access" value="reservable"><label for="f-reservable">Reservable</label></div>
+        <div class="access-row"><input type="checkbox" id="f-membership" checked data-filter="access" value="membership"><label for="f-membership">Membership only</label></div>
+        <div class="access-row"><input type="checkbox" id="f-school" checked data-filter="access" value="school"><label for="f-school">School / Limited public</label></div>
+        <div class="access-row"><input type="checkbox" id="f-unknown-access" checked data-filter="access" value="unknown-access"><label for="f-unknown-access">Unknown access</label></div>
+        <div class="access-row"><input type="checkbox" id="f-residential" checked data-filter="access" value="residential"><label for="f-residential">Private residential building</label></div>
+      </div>
+    </div>
+
+    <div class="s-divider"></div>
+
+    <!-- Stats -->
+    <div class="stats-box">
+      <div class="stats-total">
+        <div class="stats-total-num" id="statTotal">0</div>
+        <div class="stats-total-label">Facilities Shown</div>
+      </div>
+      <div class="stats-split">
+        <div class="stats-card tennis">
+          <div class="stats-card-num" id="statTennis">0</div>
+          <div class="stats-card-label">Tennis</div>
         </div>
-        <div class="filter-group-body">
-          <div class="checkbox-item">
-            <input type="checkbox" id="f-free" checked data-filter="access" value="free">
-            <label for="f-free">✅ Public / Free</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="f-permit" checked data-filter="access" value="permit">
-            <label for="f-permit">🏙️ Permit Required</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="f-private" checked data-filter="access" value="private">
-            <label for="f-private">🔒 Private Club</label>
-          </div>
+        <div class="stats-card padel">
+          <div class="stats-card-num" id="statPadel">0</div>
+          <div class="stats-card-label">Padel</div>
         </div>
       </div>
     </div>
 
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot tennis"></div> Tennis</div>
-      <div class="legend-item"><div class="legend-dot padel"></div> Padel</div>
-    </div>
+    <div class="tip">💡 Click a marker for details. Double-click to open directions.</div>
 
   </div><!-- /sidebar -->
 
   <div id="map"></div>
 </div>
 
-<button id="sidebarToggle">
-  <span id="toggleArrow">▲</span> 🎾 Filters & Search
-</button>
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ════════════════════════════════════════════════════════════
-// API KEYS — paste your keys here once you have them
+// API KEYS
 // ════════════════════════════════════════════════════════════
 const OPENWEATHER_KEY = 'e9b77c06f394ec07d16f142b581097ad';
 const ORS_KEY         = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6Ijg3MGM2ODI1YjM1YzRiYTc5M2Y1OTg2N2FlZTBlNzYxIiwiaCI6Im11cm11cjY0In0=';
 
 // ════════════════════════════════════════════════════════════
-// DATA — loaded from courts_data.json (generated by fetch_courts.py)
-// To refresh: python3 fetch_courts.py
+// DATA — loaded from courts_data.json
 // ════════════════════════════════════════════════════════════
 let courts = [];
 
 async function loadCourts() {
   try {
-    const res = await fetch('courts_data.json');
+    // Try the live Vercel API first; falls back to static JSON when running locally
+    const apiUrl = window.location.protocol === 'file:' ? 'courts_data.json' : '/api/courts';
+    const res  = await fetch(apiUrl);
+    if (!res.ok) throw new Error('API unavailable');
     const data = await res.json();
     courts = data.courts;
     const updated = data.meta?.last_updated?.slice(0,10) || '';
-    document.querySelector('.sidebar-header p').textContent =
-      `Manhattan · Brooklyn · Queens · Bronx · Staten Island${updated ? ' · Updated ' + updated : ''}`;
+    const source  = data.meta?.served_by === 'vercel-api' ? ' · Live API' : '';
+    document.getElementById('headerSub').textContent =
+      `Manhattan · Brooklyn · Queens · Bronx · Staten Island${updated ? ' · Updated ' + updated : ''}${source}`;
   } catch {
-    console.warn('Could not load courts_data.json, using inline fallback');
-    courts = INLINE_FALLBACK;
+    // Fallback 1: static JSON committed to repo
+    try {
+      const res  = await fetch('courts_data.json');
+      const data = await res.json();
+      courts = data.courts;
+    } catch {
+      // Fallback 2: hardcoded inline data
+      console.warn('Could not reach API or courts_data.json — using inline fallback');
+      courts = INLINE_FALLBACK;
+    }
   }
   initMap();
 }
 
-// Inline fallback in case courts_data.json fails to load
+// Inline fallback
 const INLINE_FALLBACK = [
   // ── MANHATTAN ───────────────────────────────────────────
   {
     id: 1, name: "Central Park Tennis Center",
     sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
     address: "Central Park, near W 93rd St, New York, NY 10024",
-    lat: 40.7859, lng: -73.9591, borough: "Manhattan", courts: 30,
-    verified: true
+    lat: 40.7859, lng: -73.9591, borough: "Manhattan", courts: 30, verified: true
   },
   {
     id: 2, name: "Riverside Park Tennis Courts",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "Riverside Park, 97th St, New York, NY 10025",
-    lat: 40.7933, lng: -73.9745, borough: "Manhattan", courts: 10,
-    verified: true
+    lat: 40.7933, lng: -73.9745, borough: "Manhattan", courts: 10, verified: true
   },
   {
     id: 3, name: "Sutton East Tennis Club",
-    sport: "tennis", location: "indoor", surface: "hard", access: "free",
+    sport: "tennis", location: "indoor", surface: "hard", access: "membership",
     address: "488 E 60th St, New York, NY 10022",
-    lat: 40.7605, lng: -73.9556, borough: "Manhattan", courts: 8,
-    verified: true
+    lat: 40.7605, lng: -73.9556, borough: "Manhattan", courts: 8, verified: true
   },
   {
     id: 4, name: "Crosstown Tennis",
-    sport: "tennis", location: "indoor", surface: "hard", access: "free",
+    sport: "tennis", location: "indoor", surface: "hard", access: "membership",
     address: "14 W 31st St, New York, NY 10001",
-    lat: 40.7477, lng: -73.9893, borough: "Manhattan", courts: 6,
-    verified: true
+    lat: 40.7477, lng: -73.9893, borough: "Manhattan", courts: 6, verified: true
   },
   {
     id: 5, name: "Hudson River Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "Pier 40, West St & W Houston St, New York, NY 10014",
-    lat: 40.7282, lng: -74.0115, borough: "Manhattan", courts: 4,
-    verified: true
+    lat: 40.7282, lng: -74.0115, borough: "Manhattan", courts: 4, verified: true
   },
   {
     id: 6, name: "Manhattan Padel Club",
-    sport: "padel", location: "indoor", surface: "hard", access: "free",
+    sport: "padel", location: "indoor", surface: "hard", access: "reservable",
     address: "450 W 43rd St, New York, NY 10036",
-    lat: 40.7596, lng: -73.9967, borough: "Manhattan", courts: 4,
-    verified: true
+    lat: 40.7596, lng: -73.9967, borough: "Manhattan", courts: 4, verified: true
   },
   {
     id: 7, name: "Inwood Hill Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Inwood Hill Park, Seaman Ave, New York, NY 10034",
-    lat: 40.8675, lng: -73.9276, borough: "Manhattan", courts: 6,
-    verified: true
+    lat: 40.8675, lng: -73.9276, borough: "Manhattan", courts: 6, verified: true
   },
   {
     id: 8, name: "Carl Schurz Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "E 84th St & East End Ave, New York, NY 10028",
-    lat: 40.7759, lng: -73.9420, borough: "Manhattan", courts: 4,
-    verified: true
+    lat: 40.7759, lng: -73.9420, borough: "Manhattan", courts: 4, verified: true
   },
   {
     id: 9, name: "Morningside Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Morningside Ave & W 120th St, New York, NY 10027",
-    lat: 40.8091, lng: -73.9578, borough: "Manhattan", courts: 3,
-    verified: true
+    lat: 40.8091, lng: -73.9578, borough: "Manhattan", courts: 3, verified: true
   },
   {
     id: 10, name: "East River Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "East River Park, Delancey St, New York, NY 10002",
-    lat: 40.7153, lng: -73.9742, borough: "Manhattan", courts: 8,
-    verified: true
+    lat: 40.7153, lng: -73.9742, borough: "Manhattan", courts: 8, verified: true
   },
 
   // ── BROOKLYN ────────────────────────────────────────────
@@ -714,108 +556,93 @@ const INLINE_FALLBACK = [
     id: 11, name: "Prospect Park Tennis Center",
     sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
     address: "Prospect Park, East Dr, Brooklyn, NY 11215",
-    lat: 40.6620, lng: -73.9707, borough: "Brooklyn", courts: 12,
-    verified: true
+    lat: 40.6620, lng: -73.9707, borough: "Brooklyn", courts: 12, verified: true
   },
   {
     id: 12, name: "McCarren Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "776 Lorimer St, Brooklyn, NY 11222",
-    lat: 40.7205, lng: -73.9536, borough: "Brooklyn", courts: 8,
-    verified: true
+    lat: 40.7205, lng: -73.9536, borough: "Brooklyn", courts: 8, verified: true
   },
   {
     id: 13, name: "Marine Park Tennis Courts",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "3302 Bedford Ave, Brooklyn, NY 11210",
-    lat: 40.5960, lng: -73.9219, borough: "Brooklyn", courts: 6,
-    verified: true
+    lat: 40.5960, lng: -73.9219, borough: "Brooklyn", courts: 6, verified: true
   },
   {
     id: 14, name: "Owl's Head Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "Colonial Rd & Shore Rd, Brooklyn, NY 11209",
-    lat: 40.6357, lng: -74.0198, borough: "Brooklyn", courts: 4,
-    verified: true
+    lat: 40.6357, lng: -74.0198, borough: "Brooklyn", courts: 4, verified: true
   },
   {
     id: 15, name: "Brooklyn Bridge Park Padel",
-    sport: "padel", location: "outdoor", surface: "hard", access: "free",
+    sport: "padel", location: "outdoor", surface: "hard", access: "reservable",
     address: "Pier 2, Brooklyn Bridge Park, Brooklyn, NY 11201",
-    lat: 40.6963, lng: -73.9980, borough: "Brooklyn", courts: 2,
-    verified: true
+    lat: 40.6963, lng: -73.9980, borough: "Brooklyn", courts: 2, verified: true
   },
   {
     id: 16, name: "Canarsie Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Flatbush Ave & Rockaway Pkwy, Brooklyn, NY 11236",
-    lat: 40.6306, lng: -73.9017, borough: "Brooklyn", courts: 5,
-    verified: true
+    lat: 40.6306, lng: -73.9017, borough: "Brooklyn", courts: 5, verified: true
   },
   {
     id: 17, name: "Betsy Head Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Livonia Ave & Strauss St, Brooklyn, NY 11212",
-    lat: 40.6706, lng: -73.9030, borough: "Brooklyn", courts: 4,
-    verified: true
+    lat: 40.6706, lng: -73.9030, borough: "Brooklyn", courts: 4, verified: true
   },
   {
     id: 18, name: "Fort Greene Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Washington Park, Fort Greene, Brooklyn, NY 11205",
-    lat: 40.6898, lng: -73.9745, borough: "Brooklyn", courts: 2,
-    verified: true
+    lat: 40.6898, lng: -73.9745, borough: "Brooklyn", courts: 2, verified: true
   },
 
   // ── QUEENS ──────────────────────────────────────────────
   {
     id: 19, name: "USTA Billie Jean King National Tennis Center",
-    sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
+    sport: "tennis", location: "outdoor", surface: "hard", access: "reservable",
     address: "Flushing Meadows–Corona Park, Queens, NY 11368",
-    lat: 40.7519, lng: -73.8467, borough: "Queens", courts: 22,
-    verified: true
+    lat: 40.7519, lng: -73.8467, borough: "Queens", courts: 22, verified: true
   },
   {
     id: 20, name: "Forest Park Tennis Courts",
     sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
     address: "Forest Park Dr, Woodhaven, NY 11421",
-    lat: 40.7007, lng: -73.8525, borough: "Queens", courts: 8,
-    verified: true
+    lat: 40.7007, lng: -73.8525, borough: "Queens", courts: 8, verified: true
   },
   {
     id: 21, name: "Flushing Meadows Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "111th St, Flushing Meadows–Corona Park, Queens, NY 11368",
-    lat: 40.7445, lng: -73.8430, borough: "Queens", courts: 12,
-    verified: true
+    lat: 40.7445, lng: -73.8430, borough: "Queens", courts: 12, verified: true
   },
   {
     id: 22, name: "Juniper Valley Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Juniper Valley Park, Middle Village, NY 11379",
-    lat: 40.7206, lng: -73.8703, borough: "Queens", courts: 4,
-    verified: true
+    lat: 40.7206, lng: -73.8703, borough: "Queens", courts: 4, verified: true
   },
   {
     id: 23, name: "Kissena Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "permit",
     address: "164-02 Kissena Blvd, Flushing, NY 11358",
-    lat: 40.7439, lng: -73.8249, borough: "Queens", courts: 6,
-    verified: true
+    lat: 40.7439, lng: -73.8249, borough: "Queens", courts: 6, verified: true
   },
   {
     id: 24, name: "Springfield Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "179-79 Brookville Blvd, Springfield Gardens, NY 11413",
-    lat: 40.6631, lng: -73.7545, borough: "Queens", courts: 4,
-    verified: true
+    lat: 40.6631, lng: -73.7545, borough: "Queens", courts: 4, verified: true
   },
   {
     id: 25, name: "Queens Padel Center",
-    sport: "padel", location: "indoor", surface: "hard", access: "free",
+    sport: "padel", location: "indoor", surface: "hard", access: "reservable",
     address: "35-10 Junction Blvd, Jackson Heights, NY 11372",
-    lat: 40.7463, lng: -73.8887, borough: "Queens", courts: 4,
-    verified: false
+    lat: 40.7463, lng: -73.8887, borough: "Queens", courts: 4, verified: false
   },
 
   // ── BRONX ───────────────────────────────────────────────
@@ -823,36 +650,31 @@ const INLINE_FALLBACK = [
     id: 26, name: "Crotona Park Tennis Courts",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Crotona Ave & Fulton Ave, Bronx, NY 10457",
-    lat: 40.8327, lng: -73.8998, borough: "Bronx", courts: 8,
-    verified: true
+    lat: 40.8327, lng: -73.8998, borough: "Bronx", courts: 8, verified: true
   },
   {
     id: 27, name: "Van Cortlandt Park Tennis",
     sport: "tennis", location: "outdoor", surface: "clay", access: "permit",
     address: "Broadway & W 242nd St, Bronx, NY 10471",
-    lat: 40.8892, lng: -73.8866, borough: "Bronx", courts: 10,
-    verified: true
+    lat: 40.8892, lng: -73.8866, borough: "Bronx", courts: 10, verified: true
   },
   {
     id: 28, name: "Pelham Bay Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Pelham Bay Park, Bruckner Blvd, Bronx, NY 10461",
-    lat: 40.8690, lng: -73.8182, borough: "Bronx", courts: 6,
-    verified: true
+    lat: 40.8690, lng: -73.8182, borough: "Bronx", courts: 6, verified: true
   },
   {
     id: 29, name: "Mullaly Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "161st St & Jerome Ave, Bronx, NY 10452",
-    lat: 40.8308, lng: -73.9270, borough: "Bronx", courts: 4,
-    verified: true
+    lat: 40.8308, lng: -73.9270, borough: "Bronx", courts: 4, verified: true
   },
   {
     id: 30, name: "Bronx Padel & Racquet Club",
-    sport: "padel", location: "indoor", surface: "hard", access: "free",
+    sport: "padel", location: "indoor", surface: "hard", access: "membership",
     address: "700 E Tremont Ave, Bronx, NY 10457",
-    lat: 40.8476, lng: -73.8798, borough: "Bronx", courts: 4,
-    verified: false
+    lat: 40.8476, lng: -73.8798, borough: "Bronx", courts: 4, verified: false
   },
 
   // ── STATEN ISLAND ───────────────────────────────────────
@@ -860,39 +682,36 @@ const INLINE_FALLBACK = [
     id: 31, name: "Silver Lake Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "915 Victory Blvd, Staten Island, NY 10301",
-    lat: 40.6268, lng: -74.0975, borough: "Staten Island", courts: 4,
-    verified: true
+    lat: 40.6268, lng: -74.0975, borough: "Staten Island", courts: 4, verified: true
   },
   {
     id: 32, name: "Willowbrook Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "Willowbrook Park, Richmond Ave, Staten Island, NY 10314",
-    lat: 40.5988, lng: -74.1639, borough: "Staten Island", courts: 6,
-    verified: true
+    lat: 40.5988, lng: -74.1639, borough: "Staten Island", courts: 6, verified: true
   },
   {
     id: 33, name: "Walker Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "50 Bard Ave, Staten Island, NY 10310",
-    lat: 40.6317, lng: -74.1156, borough: "Staten Island", courts: 4,
-    verified: true
+    lat: 40.6317, lng: -74.1156, borough: "Staten Island", courts: 4, verified: true
   },
   {
     id: 34, name: "Clove Lakes Park Tennis",
     sport: "tennis", location: "outdoor", surface: "hard", access: "free",
     address: "1150 Clove Rd, Staten Island, NY 10301",
-    lat: 40.6273, lng: -74.1142, borough: "Staten Island", courts: 4,
-    verified: true
+    lat: 40.6273, lng: -74.1142, borough: "Staten Island", courts: 4, verified: true
   },
 ]; // end INLINE_FALLBACK
 
 // ════════════════════════════════════════════════════════════
-// MAP — initialized once, markers added after data loads
+// MAP — CARTO light tiles for clean look
 // ════════════════════════════════════════════════════════════
 const map = L.map('map', { zoomControl: true }).setView([40.730, -73.950], 11);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  subdomains: 'abcd',
   maxZoom: 19
 }).addTo(map);
 
@@ -906,77 +725,95 @@ function makePinIcon(fillColor) {
 }
 
 const ICONS = {
-  tennis: makePinIcon('#2563EB'),
-  padel:  makePinIcon('#7C3AED'),
+  tennis: makePinIcon('#3b82f6'),
+  padel:  makePinIcon('#7c3aed'),
 };
 
 let markers = [];
 
 function initMap() {
-  // Clear any existing markers
   markers.forEach(m => map.removeLayer(m));
   markers = courts.map(c => {
-  const m = L.marker([c.lat, c.lng], { icon: ICONS[c.sport] }).addTo(map);
+    const m = L.marker([c.lat, c.lng], { icon: ICONS[c.sport] }).addTo(map);
 
-  const sportLabel  = c.sport.charAt(0).toUpperCase() + c.sport.slice(1);
-  const locLabel    = c.location.charAt(0).toUpperCase() + c.location.slice(1);
-  const surfLabel   = c.surface !== 'unknown' ? c.surface.charAt(0).toUpperCase() + c.surface.slice(1) : 'Unknown';
-  const accessLabel = c.access === 'private' ? '🔒 Private Club' : c.access === 'permit' ? '🏙️ Permit Required' : '✅ Public / Free';
-  const sportColor  = c.sport === 'tennis' ? '#2563EB' : '#7C3AED';
-  const verifiedBadge = c.verified
-    ? `<span style="color:#166534;font-size:11px">✓ Verified</span>`
-    : `<span style="color:#92400e;font-size:11px">⚠️ Needs verification</span>`;
+    const sportLabel  = c.sport.charAt(0).toUpperCase() + c.sport.slice(1);
+    const locLabel    = c.location.charAt(0).toUpperCase() + c.location.slice(1);
+    const surfLabel   = c.surface !== 'unknown' ? c.surface.charAt(0).toUpperCase() + c.surface.slice(1) : 'Unknown';
+    const accessLabels = {
+      'free':           'Free / First come first serve',
+      'permit':         'NYC Parks Permit',
+      'reservable':     'Reservable',
+      'membership':     'Membership only',
+      'school':         'School / Limited public',
+      'unknown-access': 'Unknown access',
+      'residential':    'Private residential building',
+    };
+    const accessLabel = accessLabels[c.access] || 'Unknown access';
+    const sportColor  = c.sport === 'tennis' ? '#3b82f6' : '#7c3aed';
+    const verifiedBadge = c.verified
+      ? `<span style="color:#166534;font-size:11px">✓ Verified</span>`
+      : `<span style="color:#92400e;font-size:11px">⚠️ Needs verification</span>`;
 
-  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c.address)}`;
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c.address)}`;
 
-  m.bindPopup(`
-    <div style="min-width:220px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
-      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
-        <div style="width:10px;height:10px;border-radius:50%;background:${sportColor};margin-top:3px;flex-shrink:0"></div>
-        <div style="font-weight:700;font-size:14px;color:#111;line-height:1.3">${c.name}</div>
+    m.bindPopup(`
+      <div style="min-width:240px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
+          <div style="width:10px;height:10px;border-radius:50%;background:${sportColor};margin-top:3px;flex-shrink:0"></div>
+          <div style="font-weight:700;font-size:14px;color:#111;line-height:1.3">${c.name}</div>
+        </div>
+        <div style="margin-bottom:10px;padding-left:18px">${verifiedBadge}</div>
+        <table style="font-size:12.5px;color:#555;border-collapse:collapse;width:100%">
+          <tr>
+            <td style="padding:3px 10px 3px 0;color:#aaa;white-space:nowrap;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Sport</td>
+            <td style="padding:3px 0;font-weight:600;color:#333">${sportLabel}</td>
+          </tr>
+          <tr>
+            <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Borough</td>
+            <td style="padding:3px 0">${c.borough}</td>
+          </tr>
+          <tr>
+            <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Location</td>
+            <td style="padding:3px 0">${locLabel}</td>
+          </tr>
+          <tr>
+            <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Surface</td>
+            <td style="padding:3px 0">${surfLabel}</td>
+          </tr>
+          <tr>
+            <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top">Access</td>
+            <td style="padding:3px 0">${accessLabel}</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 10px 0 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Courts</td>
+            <td style="padding:5px 0">${c.courts}</td>
+          </tr>
+        </table>
+
+        <!-- Availability section — loaded from /api/availability when popup opens -->
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid #f0f0f0">
+          <div id="avail-${c.id}" style="font-size:12px;color:#bbb;font-style:italic">
+            Loading availability…
+          </div>
+        </div>
+
+        <a href="${mapsUrl}" target="_blank" style="
+          display:block;margin-top:12px;padding:8px;
+          background:#111;color:#fff;text-align:center;
+          border-radius:7px;font-size:13px;font-weight:600;
+          text-decoration:none;">
+          🗺️ Get Directions
+        </a>
       </div>
-      <div style="margin-bottom:10px;padding-left:18px">${verifiedBadge}</div>
-      <table style="font-size:12.5px;color:#555;border-collapse:collapse;width:100%">
-        <tr>
-          <td style="padding:3px 10px 3px 0;color:#aaa;white-space:nowrap;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Sport</td>
-          <td style="padding:3px 0;font-weight:600;color:#333">${sportLabel}</td>
-        </tr>
-        <tr>
-          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Borough</td>
-          <td style="padding:3px 0">${c.borough}</td>
-        </tr>
-        <tr>
-          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Location</td>
-          <td style="padding:3px 0">${locLabel}</td>
-        </tr>
-        <tr>
-          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Surface</td>
-          <td style="padding:3px 0">${surfLabel}</td>
-        </tr>
-        <tr>
-          <td style="padding:3px 10px 3px 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top">Access</td>
-          <td style="padding:3px 0">${accessLabel}</td>
-        </tr>
-        <tr>
-          <td style="padding:5px 10px 0 0;color:#aaa;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top">Courts</td>
-          <td style="padding:5px 0">${c.courts}</td>
-        </tr>
-      </table>
-      <a href="${mapsUrl}" target="_blank" style="
-        display:block;margin-top:12px;padding:8px;
-        background:#111;color:#fff;text-align:center;
-        border-radius:7px;font-size:13px;font-weight:600;
-        text-decoration:none;">
-        🗺️ Get Directions
-      </a>
-    </div>
-  `);
+    `, { maxWidth: 280 });
+
+    m.on('popupopen', () => fetchAvailability(c.id, c.location === 'outdoor'));
 
     m._court = c;
     return m;
   });
   applyFilters();
-} // end initMap()
+}
 
 // ════════════════════════════════════════════════════════════
 // STATE
@@ -986,7 +823,7 @@ const state = {
     sport:    new Set(['tennis', 'padel']),
     location: new Set(['outdoor', 'indoor']),
     surface:  new Set(['hard', 'clay', 'grass', 'unknown']),
-    access:   new Set(['free', 'permit']),
+    access:   new Set(['free', 'permit', 'reservable', 'membership', 'school', 'unknown-access', 'residential']),
     borough:  new Set(['Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island']),
   },
   search: '',
@@ -996,7 +833,7 @@ const state = {
 };
 
 // ════════════════════════════════════════════════════════════
-// OPENWEATHERMAP — fetch NYC weather and show in sidebar
+// OPENWEATHERMAP
 // ════════════════════════════════════════════════════════════
 async function fetchWeather(lat = 40.7580, lng = -73.9855) {
   if (!OPENWEATHER_KEY) return;
@@ -1031,14 +868,14 @@ async function fetchWeather(lat = 40.7580, lng = -73.9855) {
 
     document.getElementById('weatherWidget').style.display = 'block';
   } catch (e) {
-    // silently fail — weather is a bonus feature
+    // silently fail
   }
 }
 
 // ════════════════════════════════════════════════════════════
-// OPENROUTESERVICE — real drive times via road routing API
+// OPENROUTESERVICE — real drive times
 // ════════════════════════════════════════════════════════════
-let _orsCache = {};  // { "lat,lng": { courtId: minutes, ... } }
+let _orsCache = {};
 
 async function fetchORSDriveTimes(originLat, originLng) {
   if (!ORS_KEY) return null;
@@ -1046,7 +883,6 @@ async function fetchORSDriveTimes(originLat, originLng) {
   if (_orsCache[cacheKey]) return _orsCache[cacheKey];
 
   try {
-    // ORS matrix supports up to 3500 elements; batch in groups of 49 courts + 1 origin
     const BATCH = 49;
     const result = {};
 
@@ -1080,7 +916,7 @@ async function fetchORSDriveTimes(originLat, originLng) {
 }
 
 // ════════════════════════════════════════════════════════════
-// HAVERSINE — fallback estimate when ORS key not set
+// HAVERSINE — fallback estimate
 // ════════════════════════════════════════════════════════════
 function haversineKm(lat1, lng1, lat2, lng2) {
   const R = 6371, toRad = d => d * Math.PI / 180;
@@ -1098,7 +934,7 @@ function estDriveMinutes(lat1, lng1, lat2, lng2) {
 // FILTER ENGINE
 // ════════════════════════════════════════════════════════════
 function applyFilters() {
-  let shown = 0;
+  let shown = 0, tennis = 0, padel = 0;
   markers.forEach(m => {
     const c = m._court;
     const ok =
@@ -1114,10 +950,19 @@ function applyFilters() {
         return mins <= df.maxMinutes;
       })());
 
-    if (ok) { m.addTo(map); shown++; }
-    else     { map.removeLayer(m); }
+    if (ok) {
+      m.addTo(map);
+      shown++;
+      if (c.sport === 'tennis') tennis++;
+      else padel++;
+    } else {
+      map.removeLayer(m);
+    }
   });
   document.getElementById('courtCount').textContent = shown;
+  document.getElementById('statTotal').textContent  = shown;
+  document.getElementById('statTennis').textContent = tennis;
+  document.getElementById('statPadel').textContent  = padel;
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1146,7 +991,7 @@ document.getElementById('resetFilters').addEventListener('click', () => {
   state.filters.sport    = new Set(['tennis', 'padel']);
   state.filters.location = new Set(['outdoor', 'indoor']);
   state.filters.surface  = new Set(['hard', 'clay', 'grass', 'unknown']);
-  state.filters.access   = new Set(['free', 'permit', 'private']);
+  state.filters.access   = new Set(['free', 'permit', 'reservable', 'membership', 'school', 'unknown-access', 'residential']);
   state.filters.borough  = new Set(['Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island']);
   state.search = '';
   state.driveFilter = null;
@@ -1160,6 +1005,12 @@ document.getElementById('resetFilters').addEventListener('click', () => {
   status.style.display = 'none';
 
   if (window._originMarker) { map.removeLayer(window._originMarker); window._originMarker = null; }
+
+  const noteEl = document.querySelector('.drive-time-note');
+  if (noteEl) {
+    noteEl.textContent = '⚠️ Estimates only — based on straight-line distance, not live traffic';
+    noteEl.style.color = '';
+  }
 
   applyFilters();
 });
@@ -1251,23 +1102,20 @@ async function applyDriveFilter(lat, lng, label) {
 
   map.setView([lat, lng], 12);
 
-  // Try real ORS routing first; fall back to haversine estimate
   const orsTimes = await fetchORSDriveTimes(lat, lng);
   const usingRealRouting = !!orsTimes;
 
   state.driveFilter = { lat, lng, maxMinutes: state.selectedMinutes, orsTimes };
   applyFilters();
 
-  // Update the disclaimer note
   const noteEl = document.querySelector('.drive-time-note');
   if (noteEl) {
     noteEl.textContent = usingRealRouting
       ? '✅ Real drive times via OpenRouteService'
       : '⚠️ Estimates only — based on straight-line distance, not live traffic';
-    noteEl.style.color = usingRealRouting ? '#166534' : '#bbb';
+    noteEl.style.color = usingRealRouting ? '#86efac' : '';
   }
 
-  // Also update weather to user's location
   if (OPENWEATHER_KEY) fetchWeather(lat, lng);
 
   const count = parseInt(document.getElementById('courtCount').textContent);
@@ -1285,7 +1133,10 @@ async function applyDriveFilter(lat, lng, label) {
     state.pendingCoords = null;
     document.getElementById('driveStatus').style.display = 'none';
     const noteEl = document.querySelector('.drive-time-note');
-    if (noteEl) { noteEl.textContent = '⚠️ Estimates only — based on straight-line distance, not live traffic'; noteEl.style.color = '#bbb'; }
+    if (noteEl) {
+      noteEl.textContent = '⚠️ Estimates only — based on straight-line distance, not live traffic';
+      noteEl.style.color = '';
+    }
     applyFilters();
     map.setView([40.730, -73.950], 11);
   });
@@ -1299,29 +1150,64 @@ function showDriveStatus(html, type) {
 }
 
 // ════════════════════════════════════════════════════════════
-// ACCORDION FILTER GROUPS
+// AVAILABILITY — calls /api/availability, renders slot grid
 // ════════════════════════════════════════════════════════════
-document.querySelectorAll('.filter-group-title').forEach(title => {
-  title.addEventListener('click', () => {
-    title.parentElement.classList.toggle('open');
-  });
-});
+async function fetchAvailability(courtId, isOutdoor) {
+  const el = document.getElementById(`avail-${courtId}`);
+  if (!el) return;
+
+  // When running locally via file://, the API isn't reachable — show a note
+  if (window.location.protocol === 'file:') {
+    el.innerHTML = `<span style="font-size:11px;color:#bbb;font-style:italic">
+      Availability loads on the live Vercel deployment
+    </span>`;
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/availability?court_id=${courtId}&outdoor=${isOutdoor}`);
+    if (!res.ok) throw new Error('unavailable');
+    const data = await res.json();
+
+    const STATUS_STYLE = {
+      available: 'background:#22c55e;color:#fff',
+      booked:    'background:#ef4444;color:#fff',
+      past:      'background:#e5e7eb;color:#9ca3af',
+      closed:    'background:#e5e7eb;color:#9ca3af',
+    };
+
+    const slots = data.slots.map(s => {
+      const style = STATUS_STYLE[s.status] || STATUS_STYLE.past;
+      return `<span style="display:inline-block;margin:2px;padding:3px 7px;
+        border-radius:5px;font-size:10.5px;font-weight:600;${style}">${s.label}</span>`;
+    }).join('');
+
+    const avail = data.available_count;
+    const total = data.slots.filter(s => s.status !== 'past' && s.status !== 'closed').length;
+
+    el.innerHTML = `
+      <div style="font-size:10px;font-weight:700;letter-spacing:.6px;color:#aaa;
+        text-transform:uppercase;margin-bottom:5px">
+        Today's Availability
+        <span style="font-weight:400;color:#22c55e;margin-left:6px">${avail}/${total} open</span>
+      </div>
+      <div style="line-height:1.8">${slots}</div>
+      <div style="margin-top:6px;font-size:10px;color:#bbb">
+        🟢 Available &nbsp; 🔴 Booked
+      </div>
+      <div style="margin-top:3px;font-size:10px;color:#d1d5db;font-style:italic">
+        ⚠️ Simulated — live NYC booking data not yet publicly available
+      </div>`;
+  } catch {
+    el.innerHTML = `<span style="font-size:11px;color:#bbb">Availability unavailable</span>`;
+  }
+}
 
 // ════════════════════════════════════════════════════════════
-// MOBILE SIDEBAR TOGGLE
-// ════════════════════════════════════════════════════════════
-document.getElementById('sidebarToggle').addEventListener('click', () => {
-  const sidebar = document.getElementById('sidebar');
-  const btn = document.getElementById('sidebarToggle');
-  const isOpen = sidebar.classList.toggle('open');
-  btn.classList.toggle('panel-open', isOpen);
-});
-
-// ════════════════════════════════════════════════════════════
-// BOOT — load data from courts_data.json, then render map
+// BOOT
 // ════════════════════════════════════════════════════════════
 loadCourts();
-fetchWeather(); // load NYC weather on startup
+fetchWeather();
 </script>
 </body>
 </html>

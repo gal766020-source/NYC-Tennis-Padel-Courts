@@ -1,0 +1,5 @@
+# Python standard library only — no external packages needed for the API functions.
+# This file is required by Vercel to recognise the Python runtime.
+# fetch_courts.py (data pipeline) uses requests — listed here for completeness.
+requests>=2.28
+pytest>=7.0
