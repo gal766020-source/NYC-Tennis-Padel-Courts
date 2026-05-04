@@ -1,8 +1,8 @@
 {
   "meta": {
-    "last_updated": "2026-04-27T12:08:19Z",
+    "last_updated": "2026-05-04T12:12:09Z",
     "source": "NYC Open Data + Geoapify + curated padel",
-    "total_courts": 110
+    "total_courts": 108
   },
   "courts": [
     {
@@ -69,7 +69,7 @@
       "name": "Randall's Island Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "hard",
+      "surface": "clay",
       "access": "permit",
       "address": "East River and Harlem River, Manhattan, NY 10035",
       "lat": 40.792617,
@@ -234,7 +234,7 @@
       "name": "Parade Ground Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "305 PARKSIDE AVENUE, Brooklyn, NY 11226",
       "lat": 40.651433,
@@ -264,7 +264,7 @@
       "name": "Central Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "1000 5 AVENUE, Manhattan, NY 10024",
       "lat": 40.789715,
@@ -1419,7 +1419,7 @@
       "name": "Riverside Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "Riverside Dr. to Hudson River, W. 72 St.to St Clair Pl., Manhattan, NY 10024",
       "lat": 40.796477,
@@ -1567,36 +1567,6 @@
     },
     {
       "id": 105,
-      "name": "Queens College Outdoor Tennis Courts",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "free",
-      "address": "Queens College Outdoor Tennis Courts, Reeves Avenue, New York, NY 11367, United States of America",
-      "lat": 40.737541,
-      "lng": -73.821671,
-      "borough": "Queens",
-      "courts": 1,
-      "verified": true,
-      "source": "Geoapify/OpenStreetMap"
-    },
-    {
-      "id": 106,
-      "name": "Court 4",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "free",
-      "address": "Court 4, Meridian Road, New York, NY 11368, United States of America",
-      "lat": 40.748735,
-      "lng": -73.848379,
-      "borough": "Queens",
-      "courts": 1,
-      "verified": true,
-      "source": "Geoapify/OpenStreetMap"
-    },
-    {
-      "id": 107,
       "name": "Manhattan Padel Club",
       "sport": "padel",
       "location": "indoor",
@@ -1611,7 +1581,7 @@
       "source": "curated"
     },
     {
-      "id": 108,
+      "id": 106,
       "name": "Brooklyn Bridge Park Padel",
       "sport": "padel",
       "location": "outdoor",
@@ -1626,7 +1596,7 @@
       "source": "curated"
     },
     {
-      "id": 109,
+      "id": 107,
       "name": "Queens Padel Center",
       "sport": "padel",
       "location": "indoor",
@@ -1641,7 +1611,7 @@
       "source": "curated"
     },
     {
-      "id": 110,
+      "id": 108,
       "name": "Bronx Padel & Racquet Club",
       "sport": "padel",
       "location": "indoor",
