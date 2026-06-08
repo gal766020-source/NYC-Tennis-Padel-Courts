@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-06-01T11:33:01Z",
+    "last_updated": "2026-06-08T10:53:30Z",
     "source": "NYC Open Data + Geoapify + curated padel",
     "total_courts": 108
   },
@@ -69,7 +69,7 @@
       "name": "Randall's Island Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "hard",
+      "surface": "clay",
       "access": "permit",
       "address": "East River and Harlem River, Manhattan, NY 10035",
       "lat": 40.792617,
