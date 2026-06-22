@@ -1,8 +1,8 @@
 {
   "meta": {
-    "last_updated": "2026-06-15T12:12:52Z",
+    "last_updated": "2026-06-22T11:53:11Z",
     "source": "NYC Open Data + Geoapify + curated padel",
-    "total_courts": 108
+    "total_courts": 111
   },
   "courts": [
     {
@@ -69,7 +69,7 @@
       "name": "Randall's Island Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "East River and Harlem River, Manhattan, NY 10035",
       "lat": 40.792617,
@@ -234,7 +234,7 @@
       "name": "Parade Ground Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "305 PARKSIDE AVENUE, Brooklyn, NY 11226",
       "lat": 40.651433,
@@ -264,7 +264,7 @@
       "name": "Central Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "1000 5 AVENUE, Manhattan, NY 10024",
       "lat": 40.789715,
@@ -591,6 +591,66 @@
       "id": 39
     },
     {
+      "name": "John V. Lindsay East River Park Tennis",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "permit",
+      "address": "Montgomery St. To E. 12 St., FDR Drive, Manhattan, NY 10002",
+      "lat": 40.715662,
+      "lng": -73.975424,
+      "borough": "Manhattan",
+      "courts": 12,
+      "verified": true,
+      "source": "NYC Open Data",
+      "id": 40
+    },
+    {
+      "name": "McCarren Park Tennis",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "permit",
+      "address": "Nassau Ave, Bayard, Leonard & N 12 Sts, Brooklyn, NY 11222",
+      "lat": 40.721977,
+      "lng": -73.954991,
+      "borough": "Brooklyn",
+      "courts": 9,
+      "verified": true,
+      "source": "NYC Open Data",
+      "id": 41
+    },
+    {
+      "name": "Mill Pond Park Tennis",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "permit",
+      "address": "65 EAST 149 STREET - 1 EAST 150 STREET, Bronx, NY 10451",
+      "lat": 40.82289,
+      "lng": -73.931704,
+      "borough": "Bronx",
+      "courts": 16,
+      "verified": true,
+      "source": "NYC Open Data",
+      "id": 42
+    },
+    {
+      "name": "Riverside Park Tennis",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "permit",
+      "address": "Riverside Dr. to Hudson River, W. 72 St.to St Clair Pl., Manhattan, NY 10024",
+      "lat": 40.811746,
+      "lng": -73.965264,
+      "borough": "Manhattan",
+      "courts": 20,
+      "verified": true,
+      "source": "NYC Open Data",
+      "id": 43
+    },
+    {
       "name": "Colden Playground Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -603,7 +663,7 @@
       "courts": 4,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 40
+      "id": 44
     },
     {
       "name": "Oakland Gardens Tennis",
@@ -618,7 +678,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 41
+      "id": 45
     },
     {
       "name": "St. Catherine's Park Tennis",
@@ -633,7 +693,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 42
+      "id": 46
     },
     {
       "name": "Marie Curie Playground Tennis",
@@ -648,7 +708,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 43
+      "id": 47
     },
     {
       "name": "Rocket Playground Tennis",
@@ -663,7 +723,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 44
+      "id": 48
     },
     {
       "name": "Helen Marshall Playground Tennis",
@@ -678,7 +738,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 45
+      "id": 49
     },
     {
       "name": "Seton Park Tennis",
@@ -693,7 +753,7 @@
       "courts": 6,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 46
+      "id": 50
     },
     {
       "name": "McGuire Fields Tennis",
@@ -708,7 +768,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 47
+      "id": 51
     },
     {
       "name": "Travers Park Tennis",
@@ -723,7 +783,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 48
+      "id": 52
     },
     {
       "name": "Rochdale Park Tennis",
@@ -738,7 +798,7 @@
       "courts": 6,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 49
+      "id": 53
     },
     {
       "name": "Jackie Robinson Park Playground Tennis",
@@ -753,7 +813,7 @@
       "courts": 4,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 50
+      "id": 54
     },
     {
       "name": "Bayswater Park Tennis",
@@ -768,7 +828,7 @@
       "courts": 6,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 51
+      "id": 55
     },
     {
       "name": "McKinley Park Tennis",
@@ -783,7 +843,7 @@
       "courts": 8,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 52
+      "id": 56
     },
     {
       "name": "Paul Raimonda Playground Tennis",
@@ -798,7 +858,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 53
+      "id": 57
     },
     {
       "name": "Van Voorhees Playground Tennis",
@@ -813,7 +873,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 54
+      "id": 58
     },
     {
       "name": "Ericsson Playground Tennis",
@@ -828,7 +888,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 55
+      "id": 59
     },
     {
       "name": "Howard Bennett Playground Tennis",
@@ -843,7 +903,7 @@
       "courts": 6,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 56
+      "id": 60
     },
     {
       "name": "Fountain Of Youth Playground Tennis",
@@ -858,7 +918,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 57
+      "id": 61
     },
     {
       "name": "Wald Playground Tennis",
@@ -873,7 +933,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 58
+      "id": 62
     },
     {
       "name": "Flushing Fields Tennis",
@@ -888,7 +948,7 @@
       "courts": 8,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 59
+      "id": 63
     },
     {
       "name": "Winthrop Playground Tennis",
@@ -903,7 +963,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 60
+      "id": 64
     },
     {
       "name": "Astoria Heights Playground Tennis",
@@ -918,7 +978,7 @@
       "courts": 5,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 61
+      "id": 65
     },
     {
       "name": "Kelly Park Playground Tennis",
@@ -933,7 +993,7 @@
       "courts": 7,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 62
+      "id": 66
     },
     {
       "name": "St. James Park Tennis",
@@ -948,7 +1008,7 @@
       "courts": 8,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 63
+      "id": 67
     },
     {
       "name": "Frederick Johnson Playground Tennis",
@@ -963,7 +1023,7 @@
       "courts": 8,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 64
+      "id": 68
     },
     {
       "name": "Moore Playground Tennis",
@@ -978,7 +1038,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 65
+      "id": 69
     },
     {
       "name": "Spirit Playground Tennis",
@@ -993,7 +1053,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 66
+      "id": 70
     },
     {
       "name": "Playground One Twenty Five CXXV Tennis",
@@ -1008,7 +1068,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 67
+      "id": 71
     },
     {
       "name": "Walker Park Tennis",
@@ -1023,7 +1083,7 @@
       "courts": 6,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 68
+      "id": 72
     },
     {
       "name": "Cooper Park Tennis",
@@ -1038,7 +1098,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 69
+      "id": 73
     },
     {
       "name": "Bensonhurst Park Tennis",
@@ -1053,7 +1113,7 @@
       "courts": 8,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 70
+      "id": 74
     },
     {
       "name": "South Oxford Park Tennis",
@@ -1068,7 +1128,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 71
+      "id": 75
     },
     {
       "name": "Broad Channel Park Tennis",
@@ -1083,7 +1143,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 72
+      "id": 76
     },
     {
       "name": "McDonald Playground Tennis",
@@ -1098,7 +1158,7 @@
       "courts": 7,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 73
+      "id": 77
     },
     {
       "name": "Robert E. Venable Park Tennis",
@@ -1113,7 +1173,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 74
+      "id": 78
     },
     {
       "name": "Archie Spigner Park Tennis",
@@ -1128,7 +1188,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 75
+      "id": 79
     },
     {
       "name": "Marcy Playground Tennis",
@@ -1143,7 +1203,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 76
+      "id": 80
     },
     {
       "name": "Sperandeo Brothers Playground Tennis",
@@ -1158,7 +1218,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 77
+      "id": 81
     },
     {
       "name": "Midland Field Tennis",
@@ -1173,7 +1233,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 78
+      "id": 82
     },
     {
       "name": "Russell Sage Playground Tennis",
@@ -1188,7 +1248,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 79
+      "id": 83
     },
     {
       "name": "Dutch Kills Playground Tennis",
@@ -1203,22 +1263,7 @@
       "courts": 4,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 80
-    },
-    {
-      "name": "Mill Pond Park Tennis",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "permit",
-      "address": "65 EAST 149 STREET - 1 EAST 150 STREET, Bronx, NY 10451",
-      "lat": 40.822882,
-      "lng": -73.931878,
-      "borough": "Bronx",
-      "courts": 16,
-      "verified": true,
-      "source": "NYC Open Data",
-      "id": 81
+      "id": 84
     },
     {
       "name": "Police Officer Edward Byrne Park Tennis",
@@ -1233,7 +1278,7 @@
       "courts": 4,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 82
+      "id": 85
     },
     {
       "name": "De Hostos Playground Tennis",
@@ -1248,7 +1293,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 83
+      "id": 86
     },
     {
       "name": "Haffen Park Tennis",
@@ -1263,7 +1308,7 @@
       "courts": 6,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 84
+      "id": 87
     },
     {
       "name": "Stars & Stripes Playground Tennis",
@@ -1278,7 +1323,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 85
+      "id": 88
     },
     {
       "name": "Williamsbridge Oval Tennis",
@@ -1293,7 +1338,7 @@
       "courts": 8,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 86
+      "id": 89
     },
     {
       "name": "Peter's Field Tennis",
@@ -1308,7 +1353,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 87
+      "id": 90
     },
     {
       "name": "Washington Market Park Tennis",
@@ -1323,7 +1368,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 88
+      "id": 91
     },
     {
       "name": "Decatur Playground Tennis",
@@ -1338,7 +1383,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 89
+      "id": 92
     },
     {
       "name": "Friends Field Tennis",
@@ -1353,7 +1398,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 90
+      "id": 93
     },
     {
       "name": "Louis Pasteur Park Tennis",
@@ -1368,7 +1413,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 91
+      "id": 94
     },
     {
       "name": "Clintonville Playground Tennis",
@@ -1383,7 +1428,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 92
+      "id": 95
     },
     {
       "name": "Tilden Playground Tennis",
@@ -1398,7 +1443,37 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 93
+      "id": 96
+    },
+    {
+      "name": "Flushing Meadows Corona Park Tennis",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "permit",
+      "address": "Grand Central Pkwy, Van Wyck Exwy, Queens, NY 11368",
+      "lat": 40.752335,
+      "lng": -73.841759,
+      "borough": "Queens",
+      "courts": 12,
+      "verified": true,
+      "source": "NYC Open Data",
+      "id": 97
+    },
+    {
+      "name": "Grand Central Parkway Extension Tennis",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "permit",
+      "address": "Astoria Blvd. and 48 St. to Union Tp., Park Drive East., Queens, NY 11375",
+      "lat": 40.737498,
+      "lng": -73.845978,
+      "borough": "Queens",
+      "courts": 1,
+      "verified": true,
+      "source": "NYC Open Data",
+      "id": 98
     },
     {
       "name": "Riverside Park South Tennis",
@@ -1413,22 +1488,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 94
-    },
-    {
-      "name": "Riverside Park Tennis",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "clay",
-      "access": "permit",
-      "address": "Riverside Dr. to Hudson River, W. 72 St.to St Clair Pl., Manhattan, NY 10024",
-      "lat": 40.796477,
-      "lng": -73.977422,
-      "borough": "Manhattan",
-      "courts": 20,
-      "verified": true,
-      "source": "NYC Open Data",
-      "id": 95
+      "id": 99
     },
     {
       "name": "NYC Parks (QS13) Tennis",
@@ -1443,7 +1503,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 96
+      "id": 100
     },
     {
       "name": "John Jay Park Tennis",
@@ -1458,7 +1518,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 97
+      "id": 101
     },
     {
       "name": "Fairview Park Tennis",
@@ -1473,7 +1533,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 98
+      "id": 102
     },
     {
       "name": "Rory Staunton Field Tennis",
@@ -1488,40 +1548,10 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 99
+      "id": 103
     },
     {
-      "name": "McCarren Park Tennis",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "permit",
-      "address": "Nassau Ave, Bayard, Leonard & N 12 Sts, Brooklyn, NY 11222",
-      "lat": 40.721491,
-      "lng": -73.954214,
-      "borough": "Brooklyn",
-      "courts": 9,
-      "verified": true,
-      "source": "NYC Open Data",
-      "id": 100
-    },
-    {
-      "name": "John V. Lindsay East River Park Tennis",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "permit",
-      "address": "Montgomery St. To E. 12 St., FDR Drive, Manhattan, NY 10002",
-      "lat": 40.715716,
-      "lng": -73.975604,
-      "borough": "Manhattan",
-      "courts": 12,
-      "verified": true,
-      "source": "NYC Open Data",
-      "id": 101
-    },
-    {
-      "id": 102,
+      "id": 104,
       "name": "Padel Haus",
       "sport": "padel",
       "location": "outdoor",
@@ -1536,7 +1566,7 @@
       "source": "Geoapify/OpenStreetMap"
     },
     {
-      "id": 103,
+      "id": 105,
       "name": "Court 16",
       "sport": "tennis",
       "location": "indoor",
@@ -1551,22 +1581,37 @@
       "source": "Geoapify/OpenStreetMap"
     },
     {
-      "id": 104,
-      "name": "Court 16",
+      "id": 106,
+      "name": "Riverside Clay Tennis Association",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "clay",
+      "access": "private",
+      "address": "Riverside Clay Tennis Association, Henry Hudson Parkway, New York, NY 10205, United States of America",
+      "lat": 40.796852,
+      "lng": -73.977007,
+      "borough": "Manhattan",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 107,
+      "name": "Court 9",
       "sport": "tennis",
       "location": "outdoor",
       "surface": "hard",
       "access": "free",
-      "address": "Court 16, United Nations Avenue North, New York, NY 11368, United States of America",
-      "lat": 40.748765,
-      "lng": -73.844927,
+      "address": "Court 9, United Nations Avenue North, New York, NY 11368, United States of America",
+      "lat": 40.748144,
+      "lng": -73.846768,
       "borough": "Queens",
       "courts": 1,
       "verified": true,
       "source": "Geoapify/OpenStreetMap"
     },
     {
-      "id": 105,
+      "id": 108,
       "name": "Manhattan Padel Club",
       "sport": "padel",
       "location": "indoor",
@@ -1581,7 +1626,7 @@
       "source": "curated"
     },
     {
-      "id": 106,
+      "id": 109,
       "name": "Brooklyn Bridge Park Padel",
       "sport": "padel",
       "location": "outdoor",
@@ -1596,7 +1641,7 @@
       "source": "curated"
     },
     {
-      "id": 107,
+      "id": 110,
       "name": "Queens Padel Center",
       "sport": "padel",
       "location": "indoor",
@@ -1611,7 +1656,7 @@
       "source": "curated"
     },
     {
-      "id": 108,
+      "id": 111,
       "name": "Bronx Padel & Racquet Club",
       "sport": "padel",
       "location": "indoor",
