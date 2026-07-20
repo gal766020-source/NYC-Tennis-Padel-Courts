@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-07-13T09:25:13Z",
+    "last_updated": "2026-07-20T08:56:33Z",
     "source": "NYC Open Data + Geoapify + curated padel",
     "total_courts": 111
   },
@@ -69,7 +69,7 @@
       "name": "Randall's Island Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "hard",
+      "surface": "clay",
       "access": "permit",
       "address": "East River and Harlem River, Manhattan, NY 10035",
       "lat": 40.792617,
@@ -597,8 +597,8 @@
       "surface": "hard",
       "access": "permit",
       "address": "Montgomery St. To E. 12 St., FDR Drive, Manhattan, NY 10002",
-      "lat": 40.715662,
-      "lng": -73.975424,
+      "lat": 40.715313,
+      "lng": -73.975188,
       "borough": "Manhattan",
       "courts": 12,
       "verified": true,
@@ -1446,6 +1446,21 @@
       "id": 96
     },
     {
+      "name": "Fairview Park Tennis",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "permit",
+      "address": "Englewood Ave., W. Shore Expwy., Veterans Rd. W., Staten Island, NY 10309",
+      "lat": 40.531476,
+      "lng": -74.231611,
+      "borough": "Staten Island",
+      "courts": 2,
+      "verified": true,
+      "source": "NYC Open Data",
+      "id": 97
+    },
+    {
       "name": "Flushing Meadows Corona Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
@@ -1458,7 +1473,7 @@
       "courts": 12,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 97
+      "id": 98
     },
     {
       "name": "Grand Central Parkway Extension Tennis",
@@ -1473,7 +1488,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 98
+      "id": 99
     },
     {
       "name": "Riverside Park South Tennis",
@@ -1488,7 +1503,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 99
+      "id": 100
     },
     {
       "name": "NYC Parks (QS13) Tennis",
@@ -1503,7 +1518,7 @@
       "courts": 1,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 100
+      "id": 101
     },
     {
       "name": "John Jay Park Tennis",
@@ -1516,21 +1531,6 @@
       "lng": -73.949624,
       "borough": "Manhattan",
       "courts": 1,
-      "verified": true,
-      "source": "NYC Open Data",
-      "id": 101
-    },
-    {
-      "name": "Fairview Park Tennis",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "permit",
-      "address": "Englewood Ave., W. Shore Expwy., Veterans Rd. W., Staten Island, NY 10309",
-      "lat": 40.531505,
-      "lng": -74.231811,
-      "borough": "Staten Island",
-      "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
       "id": 102
