@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-07-20T08:56:33Z",
+    "last_updated": "2026-07-27T09:50:29Z",
     "source": "NYC Open Data + Geoapify + curated padel",
     "total_courts": 111
   },
@@ -69,7 +69,7 @@
       "name": "Randall's Island Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "East River and Harlem River, Manhattan, NY 10035",
       "lat": 40.792617,
@@ -591,19 +591,34 @@
       "id": 39
     },
     {
+      "name": "Helen Marshall Playground Tennis",
+      "sport": "tennis",
+      "location": "outdoor",
+      "surface": "hard",
+      "access": "permit",
+      "address": "98-01 25 AVENUE, Queens, NY 11369",
+      "lat": 40.765163,
+      "lng": -73.870684,
+      "borough": "Queens",
+      "courts": 2,
+      "verified": true,
+      "source": "NYC Open Data",
+      "id": 40
+    },
+    {
       "name": "John V. Lindsay East River Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
       "surface": "hard",
       "access": "permit",
       "address": "Montgomery St. To E. 12 St., FDR Drive, Manhattan, NY 10002",
-      "lat": 40.715313,
-      "lng": -73.975188,
+      "lat": 40.715716,
+      "lng": -73.975604,
       "borough": "Manhattan",
       "courts": 12,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 40
+      "id": 41
     },
     {
       "name": "McCarren Park Tennis",
@@ -618,7 +633,7 @@
       "courts": 9,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 41
+      "id": 42
     },
     {
       "name": "Mill Pond Park Tennis",
@@ -633,7 +648,7 @@
       "courts": 16,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 42
+      "id": 43
     },
     {
       "name": "Riverside Park Tennis",
@@ -648,7 +663,7 @@
       "courts": 20,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 43
+      "id": 44
     },
     {
       "name": "Colden Playground Tennis",
@@ -663,7 +678,7 @@
       "courts": 4,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 44
+      "id": 45
     },
     {
       "name": "Oakland Gardens Tennis",
@@ -678,7 +693,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 45
+      "id": 46
     },
     {
       "name": "St. Catherine's Park Tennis",
@@ -693,7 +708,7 @@
       "courts": 3,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 46
+      "id": 47
     },
     {
       "name": "Marie Curie Playground Tennis",
@@ -708,7 +723,7 @@
       "courts": 2,
       "verified": true,
       "source": "NYC Open Data",
-      "id": 47
+      "id": 48
     },
     {
       "name": "Rocket Playground Tennis",
@@ -719,21 +734,6 @@
       "address": "88-17 NORTH CONDUIT AVENUE, Queens, NY 11417",
       "lat": 40.670695,
       "lng": -73.846047,
-      "borough": "Queens",
-      "courts": 2,
-      "verified": true,
-      "source": "NYC Open Data",
-      "id": 48
-    },
-    {
-      "name": "Helen Marshall Playground Tennis",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "permit",
-      "address": "98-01 25 AVENUE, Queens, NY 11369",
-      "lat": 40.765151,
-      "lng": -73.870677,
       "borough": "Queens",
       "courts": 2,
       "verified": true,
