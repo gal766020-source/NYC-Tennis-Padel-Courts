@@ -1,8 +1,8 @@
 {
   "meta": {
-    "last_updated": "2026-07-27T09:50:29Z",
+    "last_updated": "2026-08-03T09:42:19Z",
     "source": "NYC Open Data + Geoapify + curated padel",
-    "total_courts": 111
+    "total_courts": 108
   },
   "courts": [
     {
@@ -1552,66 +1552,21 @@
     },
     {
       "id": 104,
-      "name": "Padel Haus",
-      "sport": "padel",
-      "location": "outdoor",
-      "surface": "hard",
-      "access": "private",
-      "address": "Padel Haus, 307 Kent Avenue, New York, NY 11249, United States of America",
-      "lat": 40.714098,
-      "lng": -73.966771,
-      "borough": "Manhattan",
-      "courts": 1,
-      "verified": true,
-      "source": "Geoapify/OpenStreetMap"
-    },
-    {
-      "id": 105,
-      "name": "Court 16",
-      "sport": "tennis",
-      "location": "indoor",
-      "surface": "hard",
-      "access": "free",
-      "address": "Court 16, Queens Plaza South, New York, NY 11101, United States of America",
-      "lat": 40.752287,
-      "lng": -73.94503,
-      "borough": "Manhattan",
-      "courts": 1,
-      "verified": true,
-      "source": "Geoapify/OpenStreetMap"
-    },
-    {
-      "id": 106,
-      "name": "Riverside Clay Tennis Association",
-      "sport": "tennis",
-      "location": "outdoor",
-      "surface": "clay",
-      "access": "private",
-      "address": "Riverside Clay Tennis Association, Henry Hudson Parkway, New York, NY 10205, United States of America",
-      "lat": 40.796852,
-      "lng": -73.977007,
-      "borough": "Manhattan",
-      "courts": 1,
-      "verified": true,
-      "source": "Geoapify/OpenStreetMap"
-    },
-    {
-      "id": 107,
-      "name": "Court 9",
+      "name": "Court 4",
       "sport": "tennis",
       "location": "outdoor",
       "surface": "hard",
       "access": "free",
-      "address": "Court 9, United Nations Avenue North, New York, NY 11368, United States of America",
-      "lat": 40.748144,
-      "lng": -73.846768,
+      "address": "Court 4, Meridian Road, New York, NY 11368, United States of America",
+      "lat": 40.748735,
+      "lng": -73.848379,
       "borough": "Queens",
       "courts": 1,
       "verified": true,
       "source": "Geoapify/OpenStreetMap"
     },
     {
-      "id": 108,
+      "id": 105,
       "name": "Manhattan Padel Club",
       "sport": "padel",
       "location": "indoor",
@@ -1626,7 +1581,7 @@
       "source": "curated"
     },
     {
-      "id": 109,
+      "id": 106,
       "name": "Brooklyn Bridge Park Padel",
       "sport": "padel",
       "location": "outdoor",
@@ -1641,7 +1596,7 @@
       "source": "curated"
     },
     {
-      "id": 110,
+      "id": 107,
       "name": "Queens Padel Center",
       "sport": "padel",
       "location": "indoor",
@@ -1656,7 +1611,7 @@
       "source": "curated"
     },
     {
-      "id": 111,
+      "id": 108,
       "name": "Bronx Padel & Racquet Club",
       "sport": "padel",
       "location": "indoor",
