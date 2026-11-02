@@ -1,8 +1,8 @@
 {
   "meta": {
-    "last_updated": "2026-10-26T12:19:24Z",
+    "last_updated": "2026-11-02T14:51:20Z",
     "source": "NYC Open Data + Geoapify + curated padel",
-    "total_courts": 108
+    "total_courts": 109
   },
   "courts": [
     {
@@ -69,7 +69,7 @@
       "name": "Randall's Island Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "hard",
+      "surface": "clay",
       "access": "permit",
       "address": "Manhattan, NY",
       "lat": 40.792617,
@@ -654,7 +654,7 @@
       "name": "Riverside Park Tennis",
       "sport": "tennis",
       "location": "outdoor",
-      "surface": "clay",
+      "surface": "hard",
       "access": "permit",
       "address": "Manhattan, NY",
       "lat": 40.811746,
@@ -1552,6 +1552,21 @@
     },
     {
       "id": 104,
+      "name": "Court 16",
+      "sport": "tennis",
+      "location": "indoor",
+      "surface": "hard",
+      "access": "free",
+      "address": "Court 16, Queens Plaza South, New York, NY 11101, United States of America",
+      "lat": 40.752287,
+      "lng": -73.94503,
+      "borough": "Manhattan",
+      "courts": 1,
+      "verified": true,
+      "source": "Geoapify/OpenStreetMap"
+    },
+    {
+      "id": 105,
       "name": "Court 4",
       "sport": "tennis",
       "location": "outdoor",
@@ -1566,7 +1581,7 @@
       "source": "Geoapify/OpenStreetMap"
     },
     {
-      "id": 105,
+      "id": 106,
       "name": "Manhattan Padel Club",
       "sport": "padel",
       "location": "indoor",
@@ -1581,7 +1596,7 @@
       "source": "curated"
     },
     {
-      "id": 106,
+      "id": 107,
       "name": "Brooklyn Bridge Park Padel",
       "sport": "padel",
       "location": "outdoor",
@@ -1596,7 +1611,7 @@
       "source": "curated"
     },
     {
-      "id": 107,
+      "id": 108,
       "name": "Queens Padel Center",
       "sport": "padel",
       "location": "indoor",
@@ -1611,7 +1626,7 @@
       "source": "curated"
     },
     {
-      "id": 108,
+      "id": 109,
       "name": "Bronx Padel & Racquet Club",
       "sport": "padel",
       "location": "indoor",
